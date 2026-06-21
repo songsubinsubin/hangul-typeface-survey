@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hangul Typeface Tone Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Noto+Sans+KR&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Brush+Script&family=Nanum+Pen+Script&family=Jua&family=Black+Han+Sans&family=Gowun+Batang&family=Cormorant+Garamond:wght@400;600&family=EB+Garamond:wght@400;700&family=Bodoni+Moda:opsz,wght@6..96,400&family=Bebas+Neue&family=Courier+Prime&family=Playfair+Display:wght@400;700&family=Century+Gothic&family=Josefin+Sans:wght@300;400&family=Lato:wght@300;400&family=Satisfy&display=swap" rel="stylesheet">
+<style>
+@font-face { font-family: 'Maru Buri'; src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Maru Buri'; src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Hamlet'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Hamlet'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/Hahmlet-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+</style>
+<style>
+:root {
+  --bg: #FAFAF8; --ink: #18180F; --muted: #8A8878; --border: #E2E0D8;
+  --accent: #2A4B3C; --accent-light: #EAF0EC; --highlight: #C8A96E;
+  --surface: #F3F1EB; --error: #B84040; --white: #FFFFFF;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--ink); font-family:'DM Sans',sans-serif; font-weight:300; min-height:100vh; }
+
+.progress-wrap { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); padding:10px 32px; display:flex; align-items:center; gap:14px; }
+.progress-bar { flex:1; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.4s ease; width:0%; }
+.progress-label { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); white-space:nowrap; }
+
+.survey-wrap { max-width:660px; margin:0 auto; padding:56px 24px 120px; }
+.page { display:none; }
+.page.active { display:block; animation:fadeIn 0.3s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.intro-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--highlight); margin-bottom:16px; }
+.intro-title { font-family:'Libre Baskerville',serif; font-size:clamp(24px,4vw,38px); font-weight:400; line-height:1.25; margin-bottom:20px; }
+.intro-title em { font-style:italic; color:var(--accent); }
+.intro-body { font-size:14.5px; color:#4A4840; line-height:1.85; margin-bottom:12px; max-width:540px; }
+.intro-meta { display:flex; gap:10px; flex-wrap:wrap; margin:28px 0 36px; }
+.meta-pill { font-family:'DM Mono',monospace; font-size:11px; padding:5px 13px; border:1px solid var(--border); border-radius:20px; color:var(--muted); }
+.notice-box { background:var(--surface); border-left:3px solid var(--highlight); padding:14px 18px; border-radius:0 4px 4px 0; font-size:13px; color:var(--muted); margin-bottom:32px; line-height:1.7; }
+
+.sec-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--highlight); margin-bottom:6px; }
+.sec-title { font-family:'Libre Baskerville',serif; font-size:20px; font-weight:400; margin-bottom:6px; }
+.sec-desc { font-size:13.5px; color:var(--muted); margin-bottom:28px; line-height:1.7; }
+hr.divider { border:none; border-top:1px solid var(--border); margin:36px 0; }
+
+.q-block { margin-bottom:26px; }
+.q-label { font-size:14px; font-weight:500; margin-bottom:12px; line-height:1.5; color:var(--ink); }
+.q-label .req { color:var(--error); margin-left:2px; }
+
+.option-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:7px; }
+.option-grid.cols-2 { grid-template-columns:1fr 1fr; }
+.option-grid.cols-1 { grid-template-columns:1fr; }
+.opt { position:relative; }
+.opt input { position:absolute; opacity:0; width:0; height:0; }
+.opt label { display:block; padding:10px 14px; border:1px solid var(--border); border-radius:4px; font-size:13.5px; cursor:pointer; transition:all 0.15s; background:var(--white); color:var(--ink); line-height:1.4; }
+.opt input:checked + label { border-color:var(--accent); background:var(--accent-light); color:var(--accent); font-weight:500; }
+.opt label:hover { border-color:var(--accent); background:var(--accent-light); }
+
+.styled-select { width:100%; padding:11px 40px 11px 14px; border:1px solid var(--border); border-radius:4px; font-family:'DM Sans',sans-serif; font-size:14px; background:var(--white); color:var(--ink); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8878' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; cursor:pointer; }
+.styled-select:focus { outline:none; border-color:var(--accent); }
+
+textarea { width:100%; padding:12px 14px; border:1px solid var(--border); border-radius:4px; font-family:'DM Sans',sans-serif; font-size:14px; background:var(--white); color:var(--ink); resize:vertical; min-height:90px; line-height:1.7; }
+textarea:focus { outline:none; border-color:var(--accent); }
+
+/* Semantic scale */
+.scale-wrap { margin-bottom:18px; }
+.scale-pair-labels { display:flex; justify-content:space-between; margin-bottom:8px; }
+.scale-word { font-size:13.5px; font-weight:500; color:var(--ink); }
+.scale-row { display:flex; align-items:center; gap:8px; }
+.scale-end { font-size:11px; color:var(--muted); width:56px; font-style:italic; }
+.scale-end.right { text-align:right; }
+.scale-points { display:flex; flex:1; justify-content:space-between; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:30px; padding:6px 10px; }
+.sp { position:relative; }
+.sp input { position:absolute; opacity:0; width:0; height:0; }
+.sp label { display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px 6px; }
+.sp-dot { width:20px; height:20px; border:2px solid var(--border); border-radius:50%; background:var(--white); transition:all 0.15s; }
+.sp input:checked + label .sp-dot { background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
+.sp label:hover .sp-dot { border-color:var(--accent); }
+.sp-num { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
+
+/* Typeface display */
+.typeface-display { background:var(--ink); border-radius:8px; padding:40px 32px; margin-bottom:28px; text-align:center; position:relative; overflow:hidden; }
+.typeface-display::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,#2A4B3C22,transparent 70%); }
+.typeface-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#5A6B60; margin-bottom:16px; position:relative; }
+.typeface-sample { font-size:clamp(28px,6vw,52px); color:#EDE9E1; line-height:1.3; position:relative; }
+.typeface-name { font-family:'DM Mono',monospace; font-size:11px; color:#5A6B60; margin-top:14px; position:relative; }
+.typeface-counter { position:absolute; top:16px; right:20px; font-family:'DM Mono',monospace; font-size:11px; color:#5A6B60; }
+
+/* Emotion chips */
+.emotion-grid { display:flex; flex-wrap:wrap; gap:8px; }
+.chip-section-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin:14px 0 4px; width:100%; }
+.emotion-chip { position:relative; }
+.emotion-chip input { position:absolute; opacity:0; width:0; height:0; }
+.emotion-chip label { display:block; padding:7px 14px; border:1px solid var(--border); border-radius:20px; font-size:13px; cursor:pointer; background:var(--white); transition:all 0.15s; color:var(--ink); }
+.emotion-chip input:checked + label { background:var(--accent); border-color:var(--accent); color:white; }
+.emotion-chip label:hover { border-color:var(--accent); background:var(--accent-light); }
+
+/* Font match */
+.font-match-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:8px; }
+.font-opt { position:relative; }
+.font-opt input { position:absolute; opacity:0; width:0; height:0; }
+.font-opt label { display:flex; flex-direction:column; padding:12px 16px; border:1px solid var(--border); border-radius:4px; cursor:pointer; background:var(--white); transition:all 0.15s; }
+.font-opt input:checked + label { border-color:var(--accent); background:var(--accent-light); }
+.font-opt label:hover { border-color:var(--accent); background:var(--accent-light); }
+.font-opt-name { font-size:13.5px; font-weight:500; margin-bottom:3px; }
+.font-opt-sample { font-size:11px; color:var(--muted); line-height:1.4; }
+.font-opt-preview { font-size:22px; color:var(--ink); line-height:1.2; margin-bottom:6px; opacity:0.85; }
+
+/* Nav */
+.nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:24px; border-top:1px solid var(--border); }
+.btn-back { font-family:'DM Mono',monospace; font-size:12px; color:var(--muted); background:none; border:none; cursor:pointer; padding:10px 0; letter-spacing:0.05em; }
+.btn-back:hover { color:var(--ink); }
+.btn-next { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; padding:12px 28px; background:var(--accent); color:white; border:none; border-radius:4px; cursor:pointer; transition:background 0.2s; }
+.btn-next:hover { background:#1e3a2d; }
+.btn-submit { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; padding:14px 36px; background:var(--highlight); color:var(--ink); border:none; border-radius:4px; cursor:pointer; font-weight:500; }
+.btn-submit:hover { opacity:0.85; }
+
+.type-nav { display:flex; justify-content:center; gap:8px; margin-bottom:24px; }
+.type-dot { width:8px; height:8px; border-radius:50%; background:var(--border); transition:background 0.2s; }
+.type-dot.done { background:var(--accent); }
+.type-dot.current { background:var(--highlight); }
+
+.thankyou { text-align:center; padding:60px 0; }
+.thankyou-icon { font-size:52px; margin-bottom:20px; }
+.thankyou h2 { font-family:'Libre Baskerville',serif; font-size:28px; font-weight:400; margin-bottom:14px; }
+.thankyou p { font-size:14.5px; color:var(--muted); max-width:420px; margin:0 auto; line-height:1.8; }
+
+.step-card { display:flex; gap:16px; padding:16px; background:var(--surface); border-radius:6px; align-items:flex-start; margin-bottom:12px; }
+.step-num { font-family:'DM Mono',monospace; font-size:13px; background:var(--accent); color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.step-text-title { font-weight:500; margin-bottom:4px; font-size:14px; }
+.step-text-desc { font-size:13px; color:var(--muted); }
+
+/* Consent form */
+.consent-item { display:flex; align-items:flex-start; gap:12px; padding:13px 16px; border:1px solid var(--border); border-radius:6px; cursor:pointer; margin-bottom:9px; background:var(--white); transition:all 0.15s; }
+.consent-item:hover { border-color:var(--accent); background:var(--accent-light); }
+.consent-item input { position:absolute; opacity:0; width:0; height:0; }
+.consent-box { flex-shrink:0; width:20px; height:20px; border:2px solid var(--border); border-radius:4px; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; background:var(--white); }
+.consent-item input:checked ~ .consent-box { background:var(--accent); border-color:var(--accent); }
+.consent-item input:checked ~ .consent-box::after { content:'✓'; font-size:12px; color:white; font-weight:700; line-height:1; }
+.consent-item input:checked ~ .consent-text { color:var(--accent); }
+.consent-text { font-size:13.5px; color:var(--ink); line-height:1.6; }
+</style>
+</head>
+<body>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">Introduction</div>
+</div>
+
+<div class="survey-wrap">
+
+  <!-- PAGE CONSENT -->
+  <div class="page active" id="page-consent">
+    <div class="intro-tag">Research Ethics · Informed Consent</div>
+    <h1 class="intro-title" style="font-size:clamp(20px,3.5vw,30px);">Before we begin —<br><em>your consent matters</em></h1>
+
+    <div style="background:var(--surface);border-radius:6px;padding:20px 22px;margin-bottom:24px;font-size:13.5px;color:#4A4840;line-height:1.85;">
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Study Title:</strong> Typeface Tone Perception Across Scripts</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Researcher:</strong> Subin Song, OCAD University<br>
+        <span style="font-size:12.5px;color:var(--muted);">Contact: <a href="mailto:subinsong@ocadu.ca" style="color:var(--accent);">subinsong@ocadu.ca</a> · <a href="mailto:songsubinsubin@gmail.com" style="color:var(--accent);">songsubinsubin@gmail.com</a></span></p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Faculty Supervisor:</strong> Nancy Snow, OCAD University<br>
+        <span style="font-size:12.5px;color:var(--muted);"><a href="mailto:nsnow@ocadu.ca" style="color:var(--accent);">nsnow@ocadu.ca</a></span></p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Purpose:</strong> This study examines how graphic designers perceive the tone and personality of Hangul (Korean) typefaces — and whether those impressions connect to familiar English typefaces.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">What's involved:</strong> You will view 10 Hangul typefaces and rate each on visual impression scales. This takes approximately 15 minutes.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Voluntary:</strong> Participation is completely voluntary. You may stop at any time without consequence.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Privacy:</strong> All responses are anonymous. No identifying information is collected. Data will be stored securely for a minimum of 5 years, as per OCAD University research policy.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Dissemination:</strong> Findings may be published in academic papers or presented on a public research website. All data will be reported in aggregate form only — no individual responses will be identifiable.</p>
+      <p><strong style="color:var(--ink);">Ethics:</strong> This study is pending review by the OCAD University Research Ethics Board. Questions about your rights as a participant may be directed to the REB at <a href="mailto:ethics@ocadu.ca" style="color:var(--accent);">ethics@ocadu.ca</a>.</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <p style="font-size:13px;font-weight:500;color:var(--ink);margin-bottom:14px;">Please confirm all of the following:</p>
+
+      <label class="consent-item" id="c-label-1">
+        <input type="checkbox" id="c1" onchange="updateConsent()">
+        <span class="consent-box"></span>
+        <span class="consent-text">I have read and understood the information above about this research study.</span>
+      </label>
+
+      <label class="consent-item" id="c-label-2">
+        <input type="checkbox" id="c2" onchange="updateConsent()">
+        <span class="consent-box"></span>
+        <span class="consent-text">I am 18 years of age or older.</span>
+      </label>
+
+      <label class="consent-item" id="c-label-3">
+        <input type="checkbox" id="c3" onchange="updateConsent()">
+        <span class="consent-box"></span>
+        <span class="consent-text">I understand my participation is voluntary and I can withdraw at any time.</span>
+      </label>
+
+      <label class="consent-item" id="c-label-4">
+        <input type="checkbox" id="c4" onchange="updateConsent()">
+        <span class="consent-box"></span>
+        <span class="consent-text">I agree that my anonymous responses may be used in academic research and publications.</span>
+      </label>
+    </div>
+
+    <div id="consent-warning" style="display:none;background:#FDF3F3;border-left:3px solid var(--error);padding:11px 16px;border-radius:0 4px 4px 0;font-size:13px;color:var(--error);margin-bottom:16px;">
+      Please check all boxes above to continue.
+    </div>
+
+    <div class="nav-row" style="border:none;padding:0;margin:0;justify-content:flex-end;">
+      <button class="btn-next" id="consent-btn" onclick="proceedFromConsent()" style="opacity:0.4;cursor:not-allowed;">I Agree — Begin Survey →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 0: INTRO -->
+  <div class="page" id="page-0">
+    <div class="intro-tag">Research Survey · Typeface Tone Perception</div>
+    <h1 class="intro-title">How do you <em>read</em> a typeface<br>you can't read?</h1>
+    <p class="intro-body">This survey explores whether graphic designers who don't speak Korean can still perceive the tone and personality of Hangul typefaces — and whether those perceptions connect to familiar English typefaces.</p>
+    <p class="intro-body">You will view 10 Hangul typefaces displayed as book cover text. <strong>You do not need to read or understand Korean.</strong> We're interested in your visual and emotional impressions only.</p>
+    <div class="intro-meta">
+      <span class="meta-pill">~15 minutes</span>
+      <span class="meta-pill">10 typefaces</span>
+      <span class="meta-pill">Anonymous</span>
+    </div>
+    <div class="notice-box">
+      <strong>No Korean knowledge required.</strong> There are no right or wrong answers — your instinctive visual reaction is exactly what we're studying.
+    </div>
+    <div class="nav-row" style="border:none;padding:0;margin:0;justify-content:flex-end;">
+      <button class="btn-next" onclick="goTo(1)">Begin →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 1: DEMOGRAPHICS -->
+  <div class="page" id="page-1">
+    <div class="sec-tag">Section 1 of 4</div>
+    <h2 class="sec-title">About You</h2>
+    <p class="sec-desc">A few quick background questions. All responses are anonymous.</p>
+
+    <div class="q-block">
+      <div class="q-label">Q1. What is your primary working language? <span class="req">*</span></div>
+      <div class="option-grid cols-1">
+        <div class="opt"><input type="radio" name="worklang" id="wl1" value="english"><label for="wl1">English</label></div>
+        <div class="opt"><input type="radio" name="worklang" id="wl2" value="korean"><label for="wl2">Korean</label></div>
+        <div class="opt"><input type="radio" name="worklang" id="wl3" value="other" onchange="toggleOther('wl3','worklang_other_wrap')"><label for="wl3">Other</label></div>
+      </div>
+      <div id="worklang_other_wrap" style="display:none;margin-top:10px;">
+        <textarea id="worklang_other" placeholder="Please specify your primary working language..." style="min-height:60px;"></textarea>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Q2. How many years have you lived in Korea? <span class="req">*</span></div>
+      <div class="option-grid cols-1">
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk0" value="none" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk0">None &nbsp;&nbsp; 2 weeks</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk1" value="0-5" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk1">0–5 years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk2" value="5-10" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk2">5–10 years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk3" value="10-20" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk3">10–20 years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk4" value="20+" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk4">20+ years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk5" value="other" id="yk_other_check" onchange="toggleOther('yk5','yearsinkorea_other_wrap')"><label for="yk5">Other</label></div>
+      </div>
+      <div id="yearsinkorea_other_wrap" style="display:none;margin-top:10px;">
+        <textarea id="yearsinkorea_other" placeholder="Please specify..." style="min-height:60px;"></textarea>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Q2. How familiar are you with Korean visual culture (e.g. Korean media, design, advertising)? <span class="req">*</span></div>
+      <div class="option-grid cols-1">
+        <div class="opt"><input type="radio" name="koreanvisual" id="kv1" value="not-at-all"><label for="kv1">Not at all familiar</label></div>
+        <div class="opt"><input type="radio" name="koreanvisual" id="kv2" value="slightly"><label for="kv2">Slightly familiar</label></div>
+        <div class="opt"><input type="radio" name="koreanvisual" id="kv3" value="moderately"><label for="kv3">Moderately familiar</label></div>
+        <div class="opt"><input type="radio" name="koreanvisual" id="kv4" value="very"><label for="kv4">Very familiar</label></div>
+        <div class="opt"><input type="radio" name="koreanvisual" id="kv5" value="extremely"><label for="kv5">Extremely familiar</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Q3. Are you a current graphic design student or professional in graphic design or typography? <span class="req">*</span></div>
+      <div class="option-grid">
+        <div class="opt"><input type="radio" name="designprof" id="dp1" value="yes" onchange="toggleOther('dp_other_check','designprof_other_wrap',false)"><label for="dp1">Yes</label></div>
+        <div class="opt"><input type="radio" name="designprof" id="dp2" value="no" onchange="toggleOther('dp_other_check','designprof_other_wrap',false)"><label for="dp2">No</label></div>
+        <div class="opt"><input type="radio" name="designprof" id="dp3" value="other" onchange="toggleOther('dp3','designprof_other_wrap')"><label for="dp3">Other</label></div>
+      </div>
+      <div id="designprof_other_wrap" style="display:none;margin-top:10px;">
+        <textarea id="designprof_other" placeholder="Please describe your background..." style="min-height:60px;"></textarea>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(0)">← Back</button>
+      <button class="btn-next" onclick="goTo(2)">Next →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 2: INSTRUCTIONS -->
+  <div class="page" id="page-2">
+    <div class="sec-tag">Before We Start</div>
+    <h2 class="sec-title">What you'll be doing</h2>
+    <p class="sec-desc">For each of the 10 typefaces, you'll complete three short tasks.</p>
+
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div><div class="step-text-title">Rate the typeface on 10 personality scales</div>
+      <div class="step-text-desc">e.g. Formal ←———→ Casual. Choose the number that best matches your impression.</div></div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div><div class="step-text-title">Select up to 3 emotion words</div>
+      <div class="step-text-desc">Pick the words that best describe the feeling this typeface gives you.</div></div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div><div class="step-text-title">Match it to an English typeface</div>
+      <div class="step-text-desc">Which English typeface feels tonally most similar? Briefly explain why.</div></div>
+    </div>
+
+    <div class="notice-box" style="margin-top:24px;">
+      You are <strong>not</strong> being asked to read or translate the Korean text. Focus entirely on the visual impression — stroke style, weight, shape, and overall feel.
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(1)">← Back</button>
+      <button class="btn-next" onclick="goTo(3)">Start Typefaces →</button>
+    </div>
+  </div>
+
+  <!-- TYPEFACE PAGES (built by JS) -->
+  <div id="typeface-pages"></div>
+
+  <!-- PAGE 13: FINAL -->
+  <div class="page" id="page-13">
+    <div class="sec-tag">Section 4 of 4</div>
+    <h2 class="sec-title">Final Reflection</h2>
+    <p class="sec-desc">Overall impressions about the experience.</p>
+
+    <div class="q-block">
+      <div class="q-label">How confident did you feel distinguishing the personalities of different Hangul typefaces?</div>
+      <div class="option-grid cols-1">
+        <div class="opt"><input type="radio" name="confidence" id="c1" value="1"><label for="c1">Not at all — they all looked similar to me</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="c2" value="2"><label for="c2">Slightly — I noticed some differences</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="c3" value="3"><label for="c3">Moderately — I could identify clear differences</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="c4" value="4"><label for="c4">Very confident — the typefaces felt distinctly different</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Which visual features did you rely on most? <span style="font-size:12px;color:var(--muted);font-weight:300">(select all that apply)</span></div>
+      <div class="option-grid cols-2">
+        <div class="opt"><input type="checkbox" id="cu1" value="stroke_weight"><label for="cu1">Stroke weight (thick / thin)</label></div>
+        <div class="opt"><input type="checkbox" id="cu2" value="stroke_contrast"><label for="cu2">Stroke contrast</label></div>
+        <div class="opt"><input type="checkbox" id="cu3" value="serifs"><label for="cu3">Presence of serifs</label></div>
+        <div class="opt"><input type="checkbox" id="cu4" value="square"><label for="cu4">Square vs. rounded forms</label></div>
+        <div class="opt"><input type="checkbox" id="cu5" value="density"><label for="cu5">Visual density / spacing</label></div>
+        <div class="opt"><input type="checkbox" id="cu6" value="calligraphic"><label for="cu6">Calligraphic / handwritten quality</label></div>
+        <div class="opt"><input type="checkbox" id="cu7" value="gestalt"><label for="cu7">Overall first impression</label></div>
+        <div class="opt"><input type="checkbox" id="cu8" value="other_cue"><label for="cu8">Other</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Did any Hangul typeface remind you of a specific English typeface or category?</div>
+      <textarea placeholder="e.g. 'The third typeface reminded me of Garamond — the contrast and elegance felt similar...'"></textarea>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Was there anything that made it harder to judge tone compared to English typefaces?</div>
+      <textarea placeholder="e.g. 'The unfamiliar letterforms made it hard to look past the visual complexity...'"></textarea>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Any other observations or comments?</div>
+      <textarea placeholder="Optional..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(12)">← Back</button>
+      <button class="btn-submit" onclick="submitSurvey()">Submit Survey ✓</button>
+    </div>
+  </div>
+
+  <!-- THANK YOU -->
+  <div class="page" id="page-thanks">
+    <div class="thankyou">
+      <div class="thankyou-icon">한</div>
+      <h2>Thank you.</h2>
+      <p>Your responses have been recorded and will contribute to a practical typographic guide for designers working across Korean and English.</p>
+      <p style="margin-top:16px;font-size:13px;">Questions about this study? Please contact the researcher.</p>
+    </div>
+    <div style="text-align:center;margin-top:60px;">
+      <span onclick="openAdminModal()" style="font-size:11px;color:var(--muted);cursor:pointer;user-select:none;opacity:0.3;">Admin</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel" style="display:none; max-width:860px; margin:0 auto; padding:40px 24px 80px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:20px;">
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--highlight);margin-bottom:6px;">Admin Only</div>
+      <h1 style="font-family:'Libre Baskerville',serif;font-size:26px;font-weight:400;">Survey Statistics</h1>
+    </div>
+    <button onclick="closeAdmin()" style="font-family:'DM Mono',monospace;font-size:12px;padding:10px 20px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);">← Back to Survey</button>
+  </div>
+  <div id="admin-stats"></div>
+  <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+    <h3 style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:400;margin-bottom:16px;">Export Data</h3>
+    <button onclick="exportCSV()" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 22px;background:var(--accent);color:white;border:none;border-radius:4px;cursor:pointer;">Export CSV</button>
+    <button onclick="clearData()" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:10px 22px;background:none;border:1px solid var(--error);color:var(--error);border-radius:4px;cursor:pointer;margin-left:10px;">Clear All Data</button>
+  </div>
+</div>
+
+<!-- Admin login modal -->
+<div id="admin-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:var(--white);border-radius:8px;padding:36px 40px;max-width:360px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--highlight);margin-bottom:8px;">Admin Access</div>
+    <h2 style="font-family:'Libre Baskerville',serif;font-size:20px;font-weight:400;margin-bottom:20px;">Enter password</h2>
+    <input type="password" id="admin-pw-input" placeholder="Password" style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:14px;margin-bottom:10px;" onkeydown="if(event.key==='Enter')checkAdmin()">
+    <div id="admin-pw-error" style="display:none;color:var(--error);font-size:12px;margin-bottom:10px;">Incorrect password.</div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button onclick="checkAdmin()" style="flex:1;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;padding:11px;background:var(--accent);color:white;border:none;border-radius:4px;cursor:pointer;">Enter</button>
+      <button onclick="document.getElementById('admin-modal').style.display='none'" style="font-family:'DM Mono',monospace;font-size:12px;padding:11px 16px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Consent logic
+function updateConsent() {
+  const allChecked = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
+  const btn = document.getElementById('consent-btn');
+  btn.style.opacity = allChecked ? '1' : '0.4';
+  btn.style.cursor = allChecked ? 'pointer' : 'not-allowed';
+  if (allChecked) document.getElementById('consent-warning').style.display = 'none';
+}
+
+function proceedFromConsent() {
+  const allChecked = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
+  if (!allChecked) {
+    document.getElementById('consent-warning').style.display = 'block';
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-0').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress(0);
+}
+
+const typefaces = [
+  { id:1, name:"Myeongjo (명조체)", style:"Traditional Serif", sample:"벚꽃이 피다", css:"Georgia, serif" },
+  { id:2, name:"Noto Sans KR", style:"Modern Sans-Serif", sample:"도시의 소리", css:"'Noto Sans KR', sans-serif" },
+  { id:3, name:"Nanum Gothic (나눔고딕)", style:"Contemporary Sans", sample:"새벽 두 시", css:"'Nanum Gothic', sans-serif" },
+  { id:4, name:"Nanum Myeongjo (나눔명조)", style:"Modern Serif", sample:"고요한 바다", css:"'Nanum Myeongjo', serif" },
+  { id:5, name:"Nanum Brush Script", style:"Brush / Calligraphic", sample:"봄비 내린다", css:"'Nanum Brush Script', cursive" },
+  { id:6, name:"Nanum Pen Script (나눔펜)", style:"Handwritten", sample:"기억의 조각", css:"'Nanum Pen Script', cursive" },
+  { id:7, name:"Hahmlet (함렛)", style:"Contemporary Serif", sample:"오늘 밤하늘", css:"'Hamlet', serif" },
+  { id:8, name:"Jua (주아체)", style:"Playful / Informal", sample:"달빛 아래서", css:"'Jua', sans-serif" },
+  { id:9, name:"Black Han Sans (검은고딕)", style:"Bold Display", sample:"폭풍 전야", css:"'Black Han Sans', sans-serif" },
+  { id:10, name:"Maru Buri (마루부리)", style:"Rounded Batang Serif", sample:"그리운 시절", css:"'Maru Buri', serif" },
+];
+
+const scales = [
+  ["Formal","Casual"], ["Traditional","Modern"], ["Serious","Playful"],
+  ["Elegant","Rough"], ["Cold","Warm"], ["Feminine","Masculine"],
+  ["Delicate","Bold"], ["Approachable","Distant"], ["Simple","Complex"], ["Stable","Dynamic"],
+];
+
+const positive = ["Elegant","Refined","Trustworthy","Friendly","Approachable","Calm","Clean","Confident","Creative","Expressive","Gentle","Sophisticated","Nostalgic","Playful","Energetic","Timeless"];
+const negative = ["Cold","Rigid","Heavy","Aggressive","Distant","Bland","Chaotic","Stiff","Loud","Fragile"];
+
+const englishFonts = [
+  {name:"Times New Roman", cat:"Traditional serif", css:"'Times New Roman', Times, serif"},
+  {name:"EB Garamond", cat:"Old-style serif", css:"'EB Garamond', serif"},
+  {name:"Cormorant Garamond", cat:"Old-style serif", css:"'Cormorant Garamond', serif"},
+  {name:"Bodoni Moda", cat:"High-contrast serif", css:"'Bodoni Moda', serif"},
+  {name:"Palatino", cat:"Humanist serif", css:"Palatino, 'Palatino Linotype', 'Book Antiqua', serif"},
+  {name:"Helvetica / Arial", cat:"Neutral sans", css:"Helvetica, Arial, sans-serif"},
+  {name:"Josefin Sans", cat:"Geometric sans", css:"'Josefin Sans', sans-serif"},
+  {name:"Lato", cat:"Humanist sans", css:"'Lato', sans-serif"},
+  {name:"Bebas Neue", cat:"Display", css:"'Bebas Neue', sans-serif"},
+  {name:"Satisfy", cat:"Script", css:"'Satisfy', cursive"},
+  {name:"Courier Prime", cat:"Monospaced", css:"'Courier Prime', monospace"},
+  {name:"Georgia", cat:"Screen serif", css:"Georgia, serif"},
+];
+
+function buildTypefacePages() {
+  const container = document.getElementById('typeface-pages');
+  typefaces.forEach((tf, i) => {
+    const pageNum = i + 3;
+    const page = document.createElement('div');
+    page.className = 'page';
+    page.id = `page-${pageNum}`;
+
+    const dots = typefaces.map((_,j) =>
+      `<div class="type-dot ${j<i?'done':j===i?'current':''}"></div>`
+    ).join('');
+
+    const scalesHtml = scales.map((pair,si) => `
+      <div class="scale-wrap">
+        <div class="scale-pair-labels"><span class="scale-word">${pair[0]}</span><span class="scale-word">${pair[1]}</span></div>
+        <div class="scale-row">
+          <span class="scale-end">${pair[0]}</span>
+          <div class="scale-points">
+            ${[1,2,3,4,5,6,7].map(n=>`
+              <div class="sp">
+                <input type="radio" name="tf${tf.id}_s${si}" id="tf${tf.id}_s${si}_${n}" value="${n}">
+                <label for="tf${tf.id}_s${si}_${n}"><div class="sp-dot"></div><span class="sp-num">${n}</span></label>
+              </div>`).join('')}
+          </div>
+          <span class="scale-end right">${pair[1]}</span>
+        </div>
+      </div>`).join('');
+
+    const emotionHtml = `
+      <div class="emotion-grid">
+        <div class="chip-section-label">Positive / Neutral</div>
+        ${positive.map((w,wi)=>`
+          <div class="emotion-chip">
+            <input type="checkbox" name="tf${tf.id}_em" id="tf${tf.id}_ep${wi}" value="${w}" onchange="limitCheck(this,'tf${tf.id}_em',3)">
+            <label for="tf${tf.id}_ep${wi}">${w}</label>
+          </div>`).join('')}
+        <div class="chip-section-label">Strong / Negative</div>
+        ${negative.map((w,wi)=>`
+          <div class="emotion-chip">
+            <input type="checkbox" name="tf${tf.id}_em" id="tf${tf.id}_en${wi}" value="${w}" onchange="limitCheck(this,'tf${tf.id}_em',3)">
+            <label for="tf${tf.id}_en${wi}">${w}</label>
+          </div>`).join('')}
+      </div>`;
+
+    const fontMatchHtml = `<div class="font-match-grid">
+      ${englishFonts.map((f,fi)=>`
+        <div class="font-opt">
+          <input type="radio" name="tf${tf.id}_match" id="tf${tf.id}_fm${fi}" value="${f.name}">
+          <label for="tf${tf.id}_fm${fi}">
+            <span class="font-opt-preview" style="font-family:${f.css}">type</span>
+            <span class="font-opt-name">${f.name}</span>
+            <span class="font-opt-sample">${f.cat}</span>
+          </label>
+        </div>`).join('')}
+    </div>`;
+
+    const isLast = i === typefaces.length - 1;
+    page.innerHTML = `
+      <div class="type-nav">${dots}</div>
+      <div class="typeface-display">
+        <div class="typeface-counter">${i+1} / ${typefaces.length}</div>
+        <div class="typeface-label">Hangul Typeface — Book Cover Sample</div>
+        <div class="typeface-sample" style="font-family:${tf.css}">${tf.sample}</div>
+        <div class="typeface-name">${tf.name} · ${tf.style}</div>
+      </div>
+
+      <div class="sec-tag">Part A — Personality Rating</div>
+      <h2 class="sec-title">Rate this typeface</h2>
+      <p class="sec-desc">1 = strongly left word, 7 = strongly right word. Trust your first impression.</p>
+      ${scalesHtml}
+      <hr class="divider">
+
+      <div class="sec-tag">Part B — Emotion Words</div>
+      <h2 class="sec-title">Select up to 3 words</h2>
+      <p class="sec-desc">Which words best describe the feeling this typeface gives you?</p>
+      <div class="q-block">${emotionHtml}</div>
+      <hr class="divider">
+
+      <div class="sec-tag">Part C — English Typeface Match</div>
+      <h2 class="sec-title">Which English typeface feels most similar?</h2>
+      <p class="sec-desc">Choose the English typeface you feel carries the most similar tone or personality to this Hangul typeface.</p>
+      ${fontMatchHtml}
+      <div class="q-block" style="margin-top:18px;">
+        <div class="q-label">Why did you choose that match? What visual quality connects them?</div>
+        <textarea id="tf${tf.id}_reason" placeholder="e.g. 'Both feel structured and formal — the stroke weight and contrast feel similar...'"></textarea>
+      </div>
+
+      <div class="nav-row">
+        <button class="btn-back" onclick="goTo(${pageNum-1})">← Back</button>
+        <button class="btn-next" onclick="goTo(${isLast ? 13 : pageNum+1})">${isLast ? 'Final Questions →' : 'Next Typeface →'}</button>
+      </div>`;
+
+    container.appendChild(page);
+  });
+}
+
+buildTypefacePages();
+
+function goTo(n) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const id = n === 'thanks' ? 'page-thanks' : `page-${n}`;
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProgress(n);
+}
+
+function updateProgress(n) {
+  if (n === 'thanks') { 
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = 'Complete';
+    return;
+  }
+  const pct = Math.min(Math.round((n / 13) * 100), 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  const labels = { 0:'Introduction', 1:'About You', 2:'Instructions', 13:'Final Questions' };
+  document.getElementById('progressLabel').textContent =
+    (n >= 3 && n <= 12) ? `Typeface ${n-2} of 10` : (labels[n] || '');
+}
+
+function limitCheck(cb, name, max) {
+  const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+  if (checked.length > max) cb.checked = false;
+}
+
+// ── Other text reveal ──────────────────────────────────────────
+function toggleOther(triggerId, wrapId, show) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  if (show === false) { wrap.style.display = 'none'; return; }
+  const el = document.getElementById(triggerId);
+  wrap.style.display = (el && el.checked) ? 'block' : 'none';
+}
+
+// Attach change listeners to non-other options to hide the textarea
+document.addEventListener('DOMContentLoaded', () => {
+  [
+    { group:'yearsinkorea', otherId:'yk5', wrapId:'yearsinkorea_other_wrap' },
+    { group:'designprof',   otherId:'dp3', wrapId:'designprof_other_wrap'   },
+    { group:'worklang',     otherId:'wl3', wrapId:'worklang_other_wrap'      },
+  ].forEach(({ group, otherId, wrapId }) => {
+    document.querySelectorAll(`input[name="${group}"]`).forEach(inp => {
+      inp.addEventListener('change', () => {
+        const wrap = document.getElementById(wrapId);
+        if (wrap) wrap.style.display = inp.value === 'other' ? 'block' : 'none';
+      });
+    });
+  });
+});
+
+// ── Data storage (localStorage) ────────────────────────────────
+const STORAGE_KEY = 'hangul_survey_responses';
+
+function getSavedResponses() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveResponse(data) {
+  const all = getSavedResponses();
+  all.push(data);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+}
+
+// ── Collect & submit ───────────────────────────────────────────
+function collectDemographics() {
+  const get = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
+  const txt = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  return {
+    worklang: get('worklang') === 'other' ? ('other: ' + txt('worklang_other')) : get('worklang'),
+    yearsinkorea: get('yearsinkorea') === 'other' ? ('other: ' + txt('yearsinkorea_other')) : get('yearsinkorea'),
+    koreanvisual: get('koreanvisual'),
+    designprof: get('designprof') === 'other' ? ('other: ' + txt('designprof_other')) : get('designprof'),
+  };
+}
+
+// Collect Part A/B/C answers for all 10 typefaces
+function collectTypefaceResponses() {
+  const get = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
+  const txt = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  const out = {};
+  typefaces.forEach(tf => {
+    // Part A — 10 semantic scales per typeface
+    scales.forEach((pair, si) => {
+      out[`tf${tf.id}_${pair[0]}_${pair[1]}`] = get(`tf${tf.id}_s${si}`);
+    });
+    // Part B — up to 3 emotion words, joined into one cell
+    const checked = Array.from(document.querySelectorAll(`input[name="tf${tf.id}_em"]:checked`)).map(el => el.value);
+    out[`tf${tf.id}_emotions`] = checked.join('; ');
+    // Part C — matched English font + reason
+    out[`tf${tf.id}_fontmatch`] = get(`tf${tf.id}_match`);
+    out[`tf${tf.id}_matchreason`] = txt(`tf${tf.id}_reason`);
+  });
+  return out;
+}
+
+// Final reflection page (page-13)
+function collectFinalReflection() {
+  const finalPage = document.getElementById('page-13');
+  const confidence = finalPage.querySelector('input[name="confidence"]:checked');
+  const cues = Array.from(finalPage.querySelectorAll('input[type="checkbox"]:checked')).map(el => el.value);
+  const textareas = finalPage.querySelectorAll('textarea');
+  return {
+    confidence: confidence ? confidence.value : '',
+    visual_cues: cues.join('; '),
+    reminded_font: textareas[0] ? textareas[0].value.trim() : '',
+    harder_to_judge: textareas[1] ? textareas[1].value.trim() : '',
+    other_comments: textareas[2] ? textareas[2].value.trim() : '',
+  };
+}
+
+// ── Google Sheets sync ─────────────────────────────────────────
+// Paste your deployed Apps Script Web App URL here (see setup guide).
+const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzDj4twninsivMTTwz8eVq1hBF_MOMfaBk-U8pX523dWxJzzoSrQTOZqpEIYYYb-_vn/exec';
+
+function sendToGoogleSheets(response) {
+  if (!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL === 'PASTE_YOUR_APPS_SCRIPT_URL_HERE') {
+    console.warn('Google Sheets webhook URL not set — response saved locally only.');
+    return Promise.resolve();
+  }
+  return fetch(SHEETS_WEBHOOK_URL, {
+    method: 'POST',
+    mode: 'no-cors', // Apps Script web apps don't return readable CORS headers; no-cors lets the POST fire.
+    headers: { 'Content-Type': 'text/plain' }, // avoids a CORS preflight
+    body: JSON.stringify(response),
+  }).catch(err => console.error('Sheets sync failed, response is still saved locally:', err));
+}
+
+function submitSurvey() {
+  const demo = collectDemographics();
+  const tfData = collectTypefaceResponses();
+  const final = collectFinalReflection();
+  const response = { timestamp: new Date().toISOString(), ...demo, ...tfData, ...final };
+  saveResponse(response);       // local backup (admin panel / CSV export still works)
+  sendToGoogleSheets(response); // fire-and-forget sync to Google Sheets
+  goTo('thanks');
+}
+
+// ── Admin ──────────────────────────────────────────────────────
+const ADMIN_PASSWORD = 'hangul2024';
+
+function openAdminModal() {
+  const modal = document.getElementById('admin-modal');
+  modal.style.display = 'flex';
+  document.getElementById('admin-pw-input').value = '';
+  document.getElementById('admin-pw-error').style.display = 'none';
+  setTimeout(() => document.getElementById('admin-pw-input').focus(), 100);
+}
+
+function checkAdmin() {
+  const pw = document.getElementById('admin-pw-input').value;
+  if (pw === ADMIN_PASSWORD) {
+    document.getElementById('admin-modal').style.display = 'none';
+    showAdminPanel();
+  } else {
+    document.getElementById('admin-pw-error').style.display = 'block';
+  }
+}
+
+function showAdminPanel() {
+  document.querySelector('.survey-wrap').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  document.getElementById('admin-stats').innerHTML = renderStats();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeAdmin() {
+  document.getElementById('admin-panel').style.display = 'none';
+  document.querySelector('.survey-wrap').style.display = 'block';
+}
+
+function renderStats() {
+  const responses = getSavedResponses();
+  const n = responses.length;
+
+  if (n === 0) return `<div style="text-align:center;padding:60px 0;color:var(--muted);font-size:14px;">No responses yet.</div>`;
+
+  const countField = (field) => {
+    const counts = {};
+    responses.forEach(r => {
+      const val = r[field] || 'No answer';
+      counts[val] = (counts[val] || 0) + 1;
+    });
+    return counts;
+  };
+
+  const barChart = (counts, total) => {
+    return Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([label, count]) => {
+      const pct = Math.round((count / total) * 100);
+      const barWidth = pct;
+      return `
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-size:13px;color:var(--ink);">${label}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);">${count} &nbsp;(${pct}%)</span>
+          </div>
+          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
+            <div style="height:100%;width:${barWidth}%;background:var(--accent);border-radius:4px;transition:width 0.6s ease;"></div>
+          </div>
+        </div>`;
+    }).join('');
+  };
+
+  const section = (title, field) => {
+    const counts = countField(field);
+    return `
+      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px 28px;margin-bottom:20px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--highlight);margin-bottom:4px;">${field}</div>
+        <h3 style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:400;margin-bottom:20px;">${title}</h3>
+        ${barChart(counts, n)}
+      </div>`;
+  };
+
+  return `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;">
+      <div style="background:var(--accent);color:white;border-radius:8px;padding:20px 24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;opacity:0.7;margin-bottom:6px;">TOTAL RESPONSES</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:36px;">${n}</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;">LATEST RESPONSE</div>
+        <div style="font-size:13px;color:var(--ink);">${new Date(responses[n-1].timestamp).toLocaleDateString('en-CA', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;">FIRST RESPONSE</div>
+        <div style="font-size:13px;color:var(--ink);">${new Date(responses[0].timestamp).toLocaleDateString('en-CA', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+    </div>
+    ${section('Primary Working Language', 'worklang')}
+    ${section('Years Lived in Korea', 'yearsinkorea')}
+    ${section('Familiarity with Korean Visual Culture', 'koreanvisual')}
+    ${section('Graphic Design Student / Professional', 'designprof')}
+  `;
+}
+
+function exportCSV() {
+  const responses = getSavedResponses();
+  if (!responses.length) { alert('No data to export.'); return; }
+  const headers = Object.keys(responses[0]);
+  const rows = responses.map(r => headers.map(h => `"${(r[h]||'').replace(/"/g,'""')}"`).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `hangul_survey_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+function clearData() {
+  if (confirm(`Delete all ${getSavedResponses().length} responses? This cannot be undone.`)) {
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById('admin-stats').innerHTML = renderStats();
+  }
+}
+
+// Keyboard shortcut: Ctrl+Shift+A → open admin
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminModal();
+});
+</script>
+</body>
+</html>
