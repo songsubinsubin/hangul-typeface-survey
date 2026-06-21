@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hangul Typeface Tone Survey</title>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Noto+Sans+KR&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Brush+Script&family=Nanum+Pen+Script&family=Jua&family=Black+Han+Sans&family=Gowun+Batang&family=Cormorant+Garamond:wght@400;600&family=EB+Garamond:wght@400;700&family=Bodoni+Moda:opsz,wght@6..96,400&family=Bebas+Neue&family=Courier+Prime&family=Playfair+Display:wght@400;700&family=Century+Gothic&family=Josefin+Sans:wght@300;400&family=Lato:wght@300;400&family=Satisfy&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&family=Noto+Sans+KR&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Nanum+Brush+Script&family=Nanum+Pen+Script&family=Jua&family=Black+Han+Sans&family=Gowun+Batang&family=Do+Hyeon&display=swap" rel="stylesheet">
 <style>
 @font-face { font-family: 'Maru Buri'; src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Maru Buri'; src: url('https://hangeul.pstatic.net/hangeul_static/webfont/MaruBuri/MaruBuri-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
@@ -78,13 +78,17 @@ textarea:focus { outline:none; border-color:var(--accent); }
 .sp label:hover .sp-dot { border-color:var(--accent); }
 .sp-num { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
 
-/* Typeface display */
-.typeface-display { background:var(--ink); border-radius:8px; padding:40px 32px; margin-bottom:28px; text-align:center; position:relative; overflow:hidden; }
+/* Typeface display — updated for consonants/vowels/sentence layout */
+.typeface-display { background:var(--ink); border-radius:8px; padding:32px 32px; margin-bottom:28px; position:relative; overflow:hidden; }
 .typeface-display::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%,#2A4B3C22,transparent 70%); }
 .typeface-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:#5A6B60; margin-bottom:16px; position:relative; }
-.typeface-sample { font-size:clamp(28px,6vw,52px); color:#EDE9E1; line-height:1.3; position:relative; }
-.typeface-name { font-family:'DM Mono',monospace; font-size:11px; color:#5A6B60; margin-top:14px; position:relative; }
 .typeface-counter { position:absolute; top:16px; right:20px; font-family:'DM Mono',monospace; font-size:11px; color:#5A6B60; }
+
+.tf-section { position:relative; margin-bottom:18px; }
+.tf-section-label { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:0.14em; text-transform:uppercase; color:#4A5A50; margin-bottom:6px; }
+.tf-jamo { font-size:clamp(16px,3vw,22px); color:#C8D4CC; line-height:1.6; letter-spacing:0.08em; word-break:break-all; }
+.tf-sentence { font-size:clamp(26px,5vw,44px); color:#EDE9E1; line-height:1.35; text-align:center; padding:10px 0 4px; }
+.tf-divider { border:none; border-top:1px solid #2A3A32; margin:12px 0; }
 
 /* Emotion chips */
 .emotion-grid { display:flex; flex-wrap:wrap; gap:8px; }
@@ -95,16 +99,16 @@ textarea:focus { outline:none; border-color:var(--accent); }
 .emotion-chip input:checked + label { background:var(--accent); border-color:var(--accent); color:white; }
 .emotion-chip label:hover { border-color:var(--accent); background:var(--accent-light); }
 
-/* Font match */
+/* Font match — with sample preview */
 .font-match-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:8px; }
 .font-opt { position:relative; }
 .font-opt input { position:absolute; opacity:0; width:0; height:0; }
-.font-opt label { display:flex; flex-direction:column; padding:12px 16px; border:1px solid var(--border); border-radius:4px; cursor:pointer; background:var(--white); transition:all 0.15s; }
+.font-opt label { display:flex; flex-direction:column; padding:14px 16px; border:1px solid var(--border); border-radius:4px; cursor:pointer; background:var(--white); transition:all 0.15s; }
 .font-opt input:checked + label { border-color:var(--accent); background:var(--accent-light); }
 .font-opt label:hover { border-color:var(--accent); background:var(--accent-light); }
-.font-opt-name { font-size:13.5px; font-weight:500; margin-bottom:3px; }
-.font-opt-sample { font-size:11px; color:var(--muted); line-height:1.4; }
-.font-opt-preview { font-size:22px; color:var(--ink); line-height:1.2; margin-bottom:6px; opacity:0.85; }
+.font-opt-name { font-size:12px; font-weight:500; margin-bottom:2px; color:var(--ink); }
+.font-opt-sample { font-size:10px; color:var(--muted); }
+.font-opt-preview { font-size:20px; color:var(--ink); line-height:1.25; margin-bottom:6px; opacity:0.9; }
 
 /* Nav */
 .nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:24px; border-top:1px solid var(--border); }
@@ -145,28 +149,94 @@ textarea:focus { outline:none; border-color:var(--accent); }
 
 <div class="progress-wrap">
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="progress-label" id="progressLabel">Introduction</div>
+  <div class="progress-label" id="progressLabel">Eligibility Screening</div>
 </div>
 
 <div class="survey-wrap">
 
+  <!-- PAGE SCREENING -->
+  <div class="page active" id="page-screening">
+    <div class="intro-tag">Eligibility Screening</div>
+    <h1 class="intro-title" style="font-size:clamp(20px,3.5vw,30px);">First, a few <em>eligibility questions</em></h1>
+    <p class="intro-body" style="margin-bottom:28px;">Please answer the following questions to confirm you are eligible to participate. Your answers to this screening section will <strong>not</strong> be recorded or used in any analysis.</p>
+
+    <div class="q-block">
+      <div class="q-label">1. Are you a current student or professional in graphic design or typography? <span class="req">*</span></div>
+      <div class="option-grid cols-2">
+        <div class="opt"><input type="radio" name="scr_design" id="scrd_yes" value="yes"><label for="scrd_yes">Yes</label></div>
+        <div class="opt"><input type="radio" name="scr_design" id="scrd_no" value="no"><label for="scrd_no">No</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">2. Are you over 18 years old? <span class="req">*</span></div>
+      <div class="option-grid cols-2">
+        <div class="opt"><input type="radio" name="scr_age" id="scra_yes" value="yes"><label for="scra_yes">Yes</label></div>
+        <div class="opt"><input type="radio" name="scr_age" id="scra_no" value="no"><label for="scra_no">No</label></div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">3. Is Korean your native / first language? <span class="req">*</span></div>
+      <div class="option-grid cols-2">
+        <div class="opt"><input type="radio" name="scr_native" id="scrn_yes" value="yes" onchange="toggleScreeningBranch()"><label for="scrn_yes">Yes — Korean is my native language</label></div>
+        <div class="opt"><input type="radio" name="scr_native" id="scrn_no" value="no" onchange="toggleScreeningBranch()"><label for="scrn_no">No — Korean is not my native language</label></div>
+      </div>
+    </div>
+
+    <div class="q-block" id="scr_branch_korean" style="display:none;">
+      <div class="q-label">4. Are you a native Korean speaker with 10+ years of living experience in Korea and cultural familiarity with Korean typefaces? <span class="req">*</span></div>
+      <div class="option-grid cols-2">
+        <div class="opt"><input type="radio" name="scr_korean" id="scrk_yes" value="yes"><label for="scrk_yes">Yes</label></div>
+        <div class="opt"><input type="radio" name="scr_korean" id="scrk_no" value="no"><label for="scrk_no">No</label></div>
+      </div>
+    </div>
+
+    <div class="q-block" id="scr_branch_nonkorean" style="display:none;">
+      <div class="q-label">4. Are you an English speaker who has lived in an English-speaking country for at least 10 years and have familiarity with Latin typefaces? <span class="req">*</span></div>
+      <div class="option-grid cols-2">
+        <div class="opt"><input type="radio" name="scr_nonkorean" id="scrnk_yes" value="yes"><label for="scrnk_yes">Yes</label></div>
+        <div class="opt"><input type="radio" name="scr_nonkorean" id="scrnk_no" value="no"><label for="scrnk_no">No</label></div>
+      </div>
+    </div>
+
+    <div id="screening-warning" style="display:none;background:#FDF3F3;border-left:3px solid var(--error);padding:11px 16px;border-radius:0 4px 4px 0;font-size:13px;color:var(--error);margin-bottom:16px;">
+      Please answer all questions above to continue.
+    </div>
+
+    <div class="nav-row" style="border:none;padding:0;margin:0;justify-content:flex-end;">
+      <button class="btn-next" onclick="checkScreening()">Continue →</button>
+    </div>
+  </div>
+
+  <!-- PAGE INELIGIBLE -->
+  <div class="page" id="page-ineligible">
+    <div class="thankyou">
+      <div class="thankyou-icon">·</div>
+      <h2>You are not eligible to participate</h2>
+      <p>Based on your responses, you do not meet the eligibility criteria for this study. Thank you for your interest — your screening answers have not been recorded.</p>
+      <p style="margin-top:16px;font-size:13px;">Questions? Contact Subin Song at <a href="mailto:subinsong@ocadu.ca" style="color:var(--accent);">subinsong@ocadu.ca</a>.</p>
+    </div>
+  </div>
+
   <!-- PAGE CONSENT -->
-  <div class="page active" id="page-consent">
+  <div class="page" id="page-consent">
     <div class="intro-tag">Research Ethics · Informed Consent</div>
     <h1 class="intro-title" style="font-size:clamp(20px,3.5vw,30px);">Before we begin —<br><em>your consent matters</em></h1>
 
     <div style="background:var(--surface);border-radius:6px;padding:20px 22px;margin-bottom:24px;font-size:13.5px;color:#4A4840;line-height:1.85;">
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Study Title:</strong> Typeface Tone Perception Across Scripts</p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Researcher:</strong> Subin Song, OCAD University<br>
-        <span style="font-size:12.5px;color:var(--muted);">Contact: <a href="mailto:subinsong@ocadu.ca" style="color:var(--accent);">subinsong@ocadu.ca</a> · <a href="mailto:songsubinsubin@gmail.com" style="color:var(--accent);">songsubinsubin@gmail.com</a></span></p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Faculty Supervisor:</strong> Nancy Snow, OCAD University<br>
-        <span style="font-size:12.5px;color:var(--muted);"><a href="mailto:nsnow@ocadu.ca" style="color:var(--accent);">nsnow@ocadu.ca</a></span></p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Purpose:</strong> This study examines how graphic designers perceive the tone and personality of Hangul (Korean) typefaces — and whether those impressions connect to familiar English typefaces.</p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">What's involved:</strong> You will view 10 Hangul typefaces and rate each on visual impression scales. This takes approximately 15 minutes.</p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Voluntary:</strong> Participation is completely voluntary. You may stop at any time without consequence.</p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Privacy:</strong> All responses are anonymous. No identifying information is collected. Data will be stored securely for a minimum of 5 years, as per OCAD University research policy.</p>
-      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Dissemination:</strong> Findings may be published in academic papers or presented on a public research website. All data will be reported in aggregate form only — no individual responses will be identifiable.</p>
-      <p><strong style="color:var(--ink);">Ethics:</strong> This study is pending review by the OCAD University Research Ethics Board. Questions about your rights as a participant may be directed to the REB at <a href="mailto:ethics@ocadu.ca" style="color:var(--accent);">ethics@ocadu.ca</a>.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Study Title:</strong> How do native Korean speakers and non-Korean-speaking designers differ in their ability to perceive and distinguish the tonal voice of Hangul typefaces?</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Student Investigator:</strong> Subin Song, Faculty of Design, OCAD University<br>
+        <span style="font-size:12.5px;color:var(--muted);">Contact: <a href="mailto:subinsong@ocadu.ca" style="color:var(--accent);">subinsong@ocadu.ca</a> · 825-288-3502</span></p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Faculty Supervisor:</strong> Nancy Snow, Assistant Professor, Faculty of Design, OCAD University<br>
+        <span style="font-size:12.5px;color:var(--muted);"><a href="mailto:nsnow@faculty.ocadu.ca" style="color:var(--accent);">nsnow@faculty.ocadu.ca</a></span></p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Purpose:</strong> This research explores how non-Korean-speaking graphic designers perceive the tone of voice of Hangul typefaces based on their cultural experiences, and how they identify similarities between Latin and Korean typefaces.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">What's involved:</strong> You will be asked to look at 10 different Hangul typefaces and rate each typeface on 10 personality scales using contrasting word pairs (e.g. Formal–Casual), then select the English typeface whose tone or personality most closely matches each Hangul typeface. Participation will take approximately 30 minutes.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Demographic data collected:</strong> Your primary working language, nationality, profession or major, linguistic fluency in Korean, and prior familiarity with Korean typefaces.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Voluntary:</strong> Participation is completely voluntary. You may decline to answer any question, or withdraw at any time prior to submission simply by closing the browser window — no data is recorded until you click Submit.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Privacy:</strong> All online survey responses are fully anonymous. No directly identifiable information (e.g. names, images) is collected, so it will not be possible to identify any specific individual from the data. Because responses are anonymous, individual data cannot be identified or removed once the survey has been submitted — please consider your participation carefully before clicking Submit.</p>
+      <p style="margin-bottom:10px;"><strong style="color:var(--ink);">Study period:</strong> This study runs from July 25 to August 31, 2026. Data analysis will begin after August 31, 2026.</p>
+      <p><strong style="color:var(--ink);">Dissemination:</strong> Findings may be disseminated through academic publication or a design project. In both cases, only aggregated and de-identified data will be used. A summary of results will be available to participants upon request after October 2026 by contacting <a href="mailto:subinsong@ocadu.ca" style="color:var(--accent);">subinsong@ocadu.ca</a>.</p>
     </div>
 
     <div style="margin-bottom:20px;">
@@ -187,13 +257,13 @@ textarea:focus { outline:none; border-color:var(--accent); }
       <label class="consent-item" id="c-label-3">
         <input type="checkbox" id="c3" onchange="updateConsent()">
         <span class="consent-box"></span>
-        <span class="consent-text">I understand my participation is voluntary and I can withdraw at any time.</span>
+        <span class="consent-text">I understand my participation is voluntary, that no data is recorded until I click Submit, and that I can withdraw at any time before submitting simply by closing this browser window.</span>
       </label>
 
       <label class="consent-item" id="c-label-4">
         <input type="checkbox" id="c4" onchange="updateConsent()">
         <span class="consent-box"></span>
-        <span class="consent-text">I agree that my anonymous responses may be used in academic research and publications.</span>
+        <span class="consent-text">I understand my responses are fully anonymous and cannot be identified or withdrawn once submitted, and I agree that my anonymous responses may be used in academic research and publications.</span>
       </label>
     </div>
 
@@ -211,7 +281,7 @@ textarea:focus { outline:none; border-color:var(--accent); }
     <div class="intro-tag">Research Survey · Typeface Tone Perception</div>
     <h1 class="intro-title">How do you <em>read</em> a typeface<br>you can't read?</h1>
     <p class="intro-body">This survey explores whether graphic designers who don't speak Korean can still perceive the tone and personality of Hangul typefaces — and whether those perceptions connect to familiar English typefaces.</p>
-    <p class="intro-body">You will view 10 Hangul typefaces displayed as book cover text. <strong>You do not need to read or understand Korean.</strong> We're interested in your visual and emotional impressions only.</p>
+    <p class="intro-body">You will view 10 Hangul typefaces displayed with consonants, vowels, and a sample sentence. <strong>You do not need to read or understand Korean.</strong> We're interested in your visual and emotional impressions only.</p>
     <div class="intro-meta">
       <span class="meta-pill">~15 minutes</span>
       <span class="meta-pill">10 typefaces</span>
@@ -225,7 +295,7 @@ textarea:focus { outline:none; border-color:var(--accent); }
     </div>
   </div>
 
-  <!-- PAGE 1: DEMOGRAPHICS -->
+  <!-- PAGE 1: DEMOGRAPHICS (overlapping screening questions removed) -->
   <div class="page" id="page-1">
     <div class="sec-tag">Section 1 of 4</div>
     <h2 class="sec-title">About You</h2>
@@ -246,12 +316,12 @@ textarea:focus { outline:none; border-color:var(--accent); }
     <div class="q-block">
       <div class="q-label">Q2. How many years have you lived in Korea? <span class="req">*</span></div>
       <div class="option-grid cols-1">
-        <div class="opt"><input type="radio" name="yearsinkorea" id="yk0" value="none" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk0">None &nbsp;&nbsp; 2 weeks</label></div>
-        <div class="opt"><input type="radio" name="yearsinkorea" id="yk1" value="0-5" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk1">0–5 years</label></div>
-        <div class="opt"><input type="radio" name="yearsinkorea" id="yk2" value="5-10" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk2">5–10 years</label></div>
-        <div class="opt"><input type="radio" name="yearsinkorea" id="yk3" value="10-20" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk3">10–20 years</label></div>
-        <div class="opt"><input type="radio" name="yearsinkorea" id="yk4" value="20+" onchange="toggleOther('yk_other_check','yearsinkorea_other_wrap',false)"><label for="yk4">20+ years</label></div>
-        <div class="opt"><input type="radio" name="yearsinkorea" id="yk5" value="other" id="yk_other_check" onchange="toggleOther('yk5','yearsinkorea_other_wrap')"><label for="yk5">Other</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk0" value="none"><label for="yk0">None / under 2 weeks</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk1" value="0-5"><label for="yk1">0–5 years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk2" value="5-10"><label for="yk2">5–10 years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk3" value="10-20"><label for="yk3">10–20 years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk4" value="20+"><label for="yk4">20+ years</label></div>
+        <div class="opt"><input type="radio" name="yearsinkorea" id="yk5" value="other" onchange="toggleOther('yk5','yearsinkorea_other_wrap')"><label for="yk5">Other</label></div>
       </div>
       <div id="yearsinkorea_other_wrap" style="display:none;margin-top:10px;">
         <textarea id="yearsinkorea_other" placeholder="Please specify..." style="min-height:60px;"></textarea>
@@ -259,25 +329,13 @@ textarea:focus { outline:none; border-color:var(--accent); }
     </div>
 
     <div class="q-block">
-      <div class="q-label">Q2. How familiar are you with Korean visual culture (e.g. Korean media, design, advertising)? <span class="req">*</span></div>
+      <div class="q-label">Q3. How familiar are you with Korean visual culture (e.g. Korean media, design, advertising)? <span class="req">*</span></div>
       <div class="option-grid cols-1">
         <div class="opt"><input type="radio" name="koreanvisual" id="kv1" value="not-at-all"><label for="kv1">Not at all familiar</label></div>
         <div class="opt"><input type="radio" name="koreanvisual" id="kv2" value="slightly"><label for="kv2">Slightly familiar</label></div>
         <div class="opt"><input type="radio" name="koreanvisual" id="kv3" value="moderately"><label for="kv3">Moderately familiar</label></div>
         <div class="opt"><input type="radio" name="koreanvisual" id="kv4" value="very"><label for="kv4">Very familiar</label></div>
         <div class="opt"><input type="radio" name="koreanvisual" id="kv5" value="extremely"><label for="kv5">Extremely familiar</label></div>
-      </div>
-    </div>
-
-    <div class="q-block">
-      <div class="q-label">Q3. Are you a current graphic design student or professional in graphic design or typography? <span class="req">*</span></div>
-      <div class="option-grid">
-        <div class="opt"><input type="radio" name="designprof" id="dp1" value="yes" onchange="toggleOther('dp_other_check','designprof_other_wrap',false)"><label for="dp1">Yes</label></div>
-        <div class="opt"><input type="radio" name="designprof" id="dp2" value="no" onchange="toggleOther('dp_other_check','designprof_other_wrap',false)"><label for="dp2">No</label></div>
-        <div class="opt"><input type="radio" name="designprof" id="dp3" value="other" onchange="toggleOther('dp3','designprof_other_wrap')"><label for="dp3">Other</label></div>
-      </div>
-      <div id="designprof_other_wrap" style="display:none;margin-top:10px;">
-        <textarea id="designprof_other" placeholder="Please describe your background..." style="min-height:60px;"></textarea>
       </div>
     </div>
 
@@ -331,10 +389,10 @@ textarea:focus { outline:none; border-color:var(--accent); }
     <div class="q-block">
       <div class="q-label">How confident did you feel distinguishing the personalities of different Hangul typefaces?</div>
       <div class="option-grid cols-1">
-        <div class="opt"><input type="radio" name="confidence" id="c1" value="1"><label for="c1">Not at all — they all looked similar to me</label></div>
-        <div class="opt"><input type="radio" name="confidence" id="c2" value="2"><label for="c2">Slightly — I noticed some differences</label></div>
-        <div class="opt"><input type="radio" name="confidence" id="c3" value="3"><label for="c3">Moderately — I could identify clear differences</label></div>
-        <div class="opt"><input type="radio" name="confidence" id="c4" value="4"><label for="c4">Very confident — the typefaces felt distinctly different</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="conf1" value="1"><label for="conf1">Not at all — they all looked similar to me</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="conf2" value="2"><label for="conf2">Slightly — I noticed some differences</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="conf3" value="3"><label for="conf3">Moderately — I could identify clear differences</label></div>
+        <div class="opt"><input type="radio" name="confidence" id="conf4" value="4"><label for="conf4">Very confident — the typefaces felt distinctly different</label></div>
       </div>
     </div>
 
@@ -420,6 +478,34 @@ textarea:focus { outline:none; border-color:var(--accent); }
 </div>
 
 <script>
+// ── Screening logic ─────────────────────────────────────────────
+function toggleScreeningBranch() {
+  const isKorean = document.getElementById('scrn_yes').checked;
+  const isNonKorean = document.getElementById('scrn_no').checked;
+  document.getElementById('scr_branch_korean').style.display = isKorean ? 'block' : 'none';
+  document.getElementById('scr_branch_nonkorean').style.display = isNonKorean ? 'block' : 'none';
+}
+
+function checkScreening() {
+  const get = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; };
+  const design = get('scr_design');
+  const age = get('scr_age');
+  const native = get('scr_native');
+  const warning = document.getElementById('screening-warning');
+  if (!design || !age || !native) { warning.style.display = 'block'; return; }
+  const branchAnswer = native === 'yes' ? get('scr_korean') : get('scr_nonkorean');
+  if (!branchAnswer) { warning.style.display = 'block'; return; }
+  warning.style.display = 'none';
+  const eligible = design === 'yes' && age === 'yes' && branchAnswer === 'yes';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (eligible) {
+    document.getElementById('page-consent').classList.add('active');
+  } else {
+    document.getElementById('page-ineligible').classList.add('active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // Consent logic
 function updateConsent() {
   const allChecked = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
@@ -431,27 +517,32 @@ function updateConsent() {
 
 function proceedFromConsent() {
   const allChecked = ['c1','c2','c3','c4'].every(id => document.getElementById(id).checked);
-  if (!allChecked) {
-    document.getElementById('consent-warning').style.display = 'block';
-    return;
-  }
+  if (!allChecked) { document.getElementById('consent-warning').style.display = 'block'; return; }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-0').classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
   updateProgress(0);
 }
 
+// ── Typeface data (font name hidden from display; only code references it) ──
+// Shared sample sentence: maximises consonant/vowel coverage
+// 키스의 고유한 몽환적인 영접은 타오르는 홍염 속에 깊숙이 파묻혔다
+// covers: ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ / ㅏㅐㅑㅓㅕㅗㅜㅡㅣ and more
+const SHARED_SENTENCE = "키스의 고유한 몽환적인 영접은\n타오르는 홍염 속에 깊숙이 파묻혔다";
+const ALL_CONSONANTS = "ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ ㄲ ㄸ ㅃ ㅆ ㅉ";
+const ALL_VOWELS    = "ㅏ ㅐ ㅑ ㅒ ㅓ ㅔ ㅕ ㅖ ㅗ ㅘ ㅙ ㅚ ㅛ ㅜ ㅝ ㅞ ㅟ ㅠ ㅡ ㅢ ㅣ";
+
 const typefaces = [
-  { id:1, name:"Myeongjo (명조체)", style:"Traditional Serif", sample:"벚꽃이 피다", css:"Georgia, serif" },
-  { id:2, name:"Noto Sans KR", style:"Modern Sans-Serif", sample:"도시의 소리", css:"'Noto Sans KR', sans-serif" },
-  { id:3, name:"Nanum Gothic (나눔고딕)", style:"Contemporary Sans", sample:"새벽 두 시", css:"'Nanum Gothic', sans-serif" },
-  { id:4, name:"Nanum Myeongjo (나눔명조)", style:"Modern Serif", sample:"고요한 바다", css:"'Nanum Myeongjo', serif" },
-  { id:5, name:"Nanum Brush Script", style:"Brush / Calligraphic", sample:"봄비 내린다", css:"'Nanum Brush Script', cursive" },
-  { id:6, name:"Nanum Pen Script (나눔펜)", style:"Handwritten", sample:"기억의 조각", css:"'Nanum Pen Script', cursive" },
-  { id:7, name:"Hahmlet (함렛)", style:"Contemporary Serif", sample:"오늘 밤하늘", css:"'Hamlet', serif" },
-  { id:8, name:"Jua (주아체)", style:"Playful / Informal", sample:"달빛 아래서", css:"'Jua', sans-serif" },
-  { id:9, name:"Black Han Sans (검은고딕)", style:"Bold Display", sample:"폭풍 전야", css:"'Black Han Sans', sans-serif" },
-  { id:10, name:"Maru Buri (마루부리)", style:"Rounded Batang Serif", sample:"그리운 시절", css:"'Maru Buri', serif" },
+  { id:1, style:"Traditional Serif",        css:"'Nanum Myeongjo', serif" },
+  { id:2, style:"Modern Sans-Serif",         css:"'Noto Sans KR', sans-serif" },
+  { id:3, style:"Contemporary Sans",         css:"'Nanum Gothic', sans-serif" },
+  { id:4, style:"Brush / Calligraphic",      css:"'Nanum Brush Script', cursive" },
+  { id:5, style:"Handwritten",               css:"'Nanum Pen Script', cursive" },
+  { id:6, style:"Contemporary Serif",        css:"'Hamlet', serif" },
+  { id:7, style:"Playful / Informal",        css:"'Jua', sans-serif" },
+  { id:8, style:"Bold Display",              css:"'Black Han Sans', sans-serif" },
+  { id:9, style:"Rounded Batang Serif",      css:"'Gowun Batang', serif" },
+  { id:10,style:"Geometric / Rounded Sans",  css:"'Do Hyeon', sans-serif" },
 ];
 
 const scales = [
@@ -463,19 +554,23 @@ const scales = [
 const positive = ["Elegant","Refined","Trustworthy","Friendly","Approachable","Calm","Clean","Confident","Creative","Expressive","Gentle","Sophisticated","Nostalgic","Playful","Energetic","Timeless"];
 const negative = ["Cold","Rigid","Heavy","Aggressive","Distant","Bland","Chaotic","Stiff","Loud","Fragile"];
 
+// English fonts used for matching — with sample text rendered in their actual CSS
 const englishFonts = [
-  {name:"Times New Roman", cat:"Traditional serif", css:"'Times New Roman', Times, serif"},
-  {name:"EB Garamond", cat:"Old-style serif", css:"'EB Garamond', serif"},
-  {name:"Cormorant Garamond", cat:"Old-style serif", css:"'Cormorant Garamond', serif"},
-  {name:"Bodoni Moda", cat:"High-contrast serif", css:"'Bodoni Moda', serif"},
-  {name:"Palatino", cat:"Humanist serif", css:"Palatino, 'Palatino Linotype', 'Book Antiqua', serif"},
-  {name:"Helvetica / Arial", cat:"Neutral sans", css:"Helvetica, Arial, sans-serif"},
-  {name:"Josefin Sans", cat:"Geometric sans", css:"'Josefin Sans', sans-serif"},
-  {name:"Lato", cat:"Humanist sans", css:"'Lato', sans-serif"},
-  {name:"Bebas Neue", cat:"Display", css:"'Bebas Neue', sans-serif"},
-  {name:"Satisfy", cat:"Script", css:"'Satisfy', cursive"},
-  {name:"Courier Prime", cat:"Monospaced", css:"'Courier Prime', monospace"},
-  {name:"Georgia", cat:"Screen serif", css:"Georgia, serif"},
+  {name:"Garamond",         cat:"Old-style serif",       css:"'EB Garamond', Garamond, serif",                          sample:"Garamond"},
+  {name:"Centaur",          cat:"Humanist serif",         css:"Centaur, 'Palatino Linotype', Palatino, serif",            sample:"Centaur"},
+  {name:"Times New Roman",  cat:"Traditional serif",      css:"'Times New Roman', Times, serif",                          sample:"Times New Roman"},
+  {name:"Belwe Lt BT",      cat:"Art Nouveau serif",      css:"'Libre Baskerville', Georgia, serif",                      sample:"Belwe Lt BT"},
+  {name:"Footlight MT Light",cat:"Transitional serif",    css:"'Book Antiqua', Palatino, serif",                          sample:"Footlight MT"},
+  {name:"Harrington",       cat:"Decorative serif",       css:"'Palatino Linotype', Palatino, serif",                     sample:"Harrington"},
+  {name:"Arial",            cat:"Neutral sans-serif",     css:"Arial, Helvetica, sans-serif",                             sample:"Arial"},
+  {name:"Helvetica",        cat:"Neutral sans-serif",     css:"Helvetica, Arial, sans-serif",                             sample:"Helvetica"},
+  {name:"Bauhaus 93",       cat:"Geometric display",      css:"'Josefin Sans', 'Century Gothic', sans-serif",             sample:"Bauhaus 93"},
+  {name:"Kabel",            cat:"Geometric sans-serif",   css:"'Josefin Sans', sans-serif",                               sample:"Kabel"},
+  {name:"Rockwell",         cat:"Slab serif",             css:"Rockwell, 'Courier New', serif",                           sample:"Rockwell"},
+  {name:"Snap ITC",         cat:"Display / Informal",     css:"'Courier Prime', 'Courier New', monospace",                sample:"Snap ITC"},
+  {name:"Chiller",          cat:"Horror / Display",       css:"'Satisfy', cursive",                                       sample:"Chiller"},
+  {name:"Jokerman",         cat:"Decorative display",     css:"'Bebas Neue', Impact, sans-serif",                         sample:"Jokerman"},
+  {name:"Harry Potter",     cat:"Script / Display",       css:"'Satisfy', cursive",                                       sample:"Harry Potter"},
 ];
 
 function buildTypefacePages() {
@@ -522,26 +617,48 @@ function buildTypefacePages() {
           </div>`).join('')}
       </div>`;
 
+    // Font match grid — each option shows a rendered sample
     const fontMatchHtml = `<div class="font-match-grid">
       ${englishFonts.map((f,fi)=>`
         <div class="font-opt">
           <input type="radio" name="tf${tf.id}_match" id="tf${tf.id}_fm${fi}" value="${f.name}">
           <label for="tf${tf.id}_fm${fi}">
-            <span class="font-opt-preview" style="font-family:${f.css}">type</span>
+            <span class="font-opt-preview" style="font-family:${f.css}">${f.sample}</span>
             <span class="font-opt-name">${f.name}</span>
             <span class="font-opt-sample">${f.cat}</span>
           </label>
         </div>`).join('')}
     </div>`;
 
+    // Sentence with newline support
+    const sentenceLines = SHARED_SENTENCE.split('\n').map(l=>`<div>${l}</div>`).join('');
+
     const isLast = i === typefaces.length - 1;
     page.innerHTML = `
       <div class="type-nav">${dots}</div>
-      <div class="typeface-display">
+
+      <div class="typeface-display" style="font-family:${tf.css}">
         <div class="typeface-counter">${i+1} / ${typefaces.length}</div>
-        <div class="typeface-label">Hangul Typeface — Book Cover Sample</div>
-        <div class="typeface-sample" style="font-family:${tf.css}">${tf.sample}</div>
-        <div class="typeface-name">${tf.name} · ${tf.style}</div>
+        <div class="typeface-label">Hangul Typeface ${i+1} · ${tf.style}</div>
+
+        <div class="tf-section">
+          <div class="tf-section-label">Consonants (자음)</div>
+          <div class="tf-jamo">${ALL_CONSONANTS}</div>
+        </div>
+
+        <div class="tf-divider"></div>
+
+        <div class="tf-section">
+          <div class="tf-section-label">Vowels (모음)</div>
+          <div class="tf-jamo">${ALL_VOWELS}</div>
+        </div>
+
+        <div class="tf-divider"></div>
+
+        <div class="tf-section">
+          <div class="tf-section-label">Sample Sentence</div>
+          <div class="tf-sentence">${sentenceLines}</div>
+        </div>
       </div>
 
       <div class="sec-tag">Part A — Personality Rating</div>
@@ -561,8 +678,8 @@ function buildTypefacePages() {
       <p class="sec-desc">Choose the English typeface you feel carries the most similar tone or personality to this Hangul typeface.</p>
       ${fontMatchHtml}
       <div class="q-block" style="margin-top:18px;">
-        <div class="q-label">Why did you choose that match? What visual quality connects them?</div>
-        <textarea id="tf${tf.id}_reason" placeholder="e.g. 'Both feel structured and formal — the stroke weight and contrast feel similar...'"></textarea>
+        <div class="q-label">Which visual quality most influenced your impression: the brushstroke quality, stroke width, or the shape of the edges?</div>
+        <textarea id="tf${tf.id}_reason" placeholder="e.g. 'The stroke width and edge shapes felt very similar — both carry the same structured, formal quality...'"></textarea>
       </div>
 
       <div class="nav-row">
@@ -586,7 +703,7 @@ function goTo(n) {
 }
 
 function updateProgress(n) {
-  if (n === 'thanks') { 
+  if (n === 'thanks') {
     document.getElementById('progressFill').style.width = '100%';
     document.getElementById('progressLabel').textContent = 'Complete';
     return;
@@ -603,7 +720,6 @@ function limitCheck(cb, name, max) {
   if (checked.length > max) cb.checked = false;
 }
 
-// ── Other text reveal ──────────────────────────────────────────
 function toggleOther(triggerId, wrapId, show) {
   const wrap = document.getElementById(wrapId);
   if (!wrap) return;
@@ -612,12 +728,10 @@ function toggleOther(triggerId, wrapId, show) {
   wrap.style.display = (el && el.checked) ? 'block' : 'none';
 }
 
-// Attach change listeners to non-other options to hide the textarea
 document.addEventListener('DOMContentLoaded', () => {
   [
     { group:'yearsinkorea', otherId:'yk5', wrapId:'yearsinkorea_other_wrap' },
-    { group:'designprof',   otherId:'dp3', wrapId:'designprof_other_wrap'   },
-    { group:'worklang',     otherId:'wl3', wrapId:'worklang_other_wrap'      },
+    { group:'worklang',     otherId:'wl3', wrapId:'worklang_other_wrap' },
   ].forEach(({ group, otherId, wrapId }) => {
     document.querySelectorAll(`input[name="${group}"]`).forEach(inp => {
       inp.addEventListener('change', () => {
@@ -628,21 +742,17 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// ── Data storage (localStorage) ────────────────────────────────
+// ── Data storage ──────────────────────────────────────────────
 const STORAGE_KEY = 'hangul_survey_responses';
-
 function getSavedResponses() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch { return []; }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; }
 }
-
 function saveResponse(data) {
   const all = getSavedResponses();
   all.push(data);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
 }
 
-// ── Collect & submit ───────────────────────────────────────────
 function collectDemographics() {
   const get = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
   const txt = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
@@ -650,31 +760,25 @@ function collectDemographics() {
     worklang: get('worklang') === 'other' ? ('other: ' + txt('worklang_other')) : get('worklang'),
     yearsinkorea: get('yearsinkorea') === 'other' ? ('other: ' + txt('yearsinkorea_other')) : get('yearsinkorea'),
     koreanvisual: get('koreanvisual'),
-    designprof: get('designprof') === 'other' ? ('other: ' + txt('designprof_other')) : get('designprof'),
   };
 }
 
-// Collect Part A/B/C answers for all 10 typefaces
 function collectTypefaceResponses() {
   const get = (name) => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
   const txt = (id) => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
   const out = {};
   typefaces.forEach(tf => {
-    // Part A — 10 semantic scales per typeface
     scales.forEach((pair, si) => {
       out[`tf${tf.id}_${pair[0]}_${pair[1]}`] = get(`tf${tf.id}_s${si}`);
     });
-    // Part B — up to 3 emotion words, joined into one cell
     const checked = Array.from(document.querySelectorAll(`input[name="tf${tf.id}_em"]:checked`)).map(el => el.value);
     out[`tf${tf.id}_emotions`] = checked.join('; ');
-    // Part C — matched English font + reason
     out[`tf${tf.id}_fontmatch`] = get(`tf${tf.id}_match`);
     out[`tf${tf.id}_matchreason`] = txt(`tf${tf.id}_reason`);
   });
   return out;
 }
 
-// Final reflection page (page-13)
 function collectFinalReflection() {
   const finalPage = document.getElementById('page-13');
   const confidence = finalPage.querySelector('input[name="confidence"]:checked');
@@ -689,8 +793,6 @@ function collectFinalReflection() {
   };
 }
 
-// ── Google Sheets sync ─────────────────────────────────────────
-// Paste your deployed Apps Script Web App URL here (see setup guide).
 const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzDj4twninsivMTTwz8eVq1hBF_MOMfaBk-U8pX523dWxJzzoSrQTOZqpEIYYYb-_vn/exec';
 
 function sendToGoogleSheets(response) {
@@ -699,11 +801,10 @@ function sendToGoogleSheets(response) {
     return Promise.resolve();
   }
   return fetch(SHEETS_WEBHOOK_URL, {
-    method: 'POST',
-    mode: 'no-cors', // Apps Script web apps don't return readable CORS headers; no-cors lets the POST fire.
-    headers: { 'Content-Type': 'text/plain' }, // avoids a CORS preflight
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify(response),
-  }).catch(err => console.error('Sheets sync failed, response is still saved locally:', err));
+  }).catch(err => console.error('Sheets sync failed:', err));
 }
 
 function submitSurvey() {
@@ -711,8 +812,8 @@ function submitSurvey() {
   const tfData = collectTypefaceResponses();
   const final = collectFinalReflection();
   const response = { timestamp: new Date().toISOString(), ...demo, ...tfData, ...final };
-  saveResponse(response);       // local backup (admin panel / CSV export still works)
-  sendToGoogleSheets(response); // fire-and-forget sync to Google Sheets
+  saveResponse(response);
+  sendToGoogleSheets(response);
   goTo('thanks');
 }
 
@@ -752,43 +853,22 @@ function closeAdmin() {
 function renderStats() {
   const responses = getSavedResponses();
   const n = responses.length;
-
   if (n === 0) return `<div style="text-align:center;padding:60px 0;color:var(--muted);font-size:14px;">No responses yet.</div>`;
 
   const countField = (field) => {
     const counts = {};
-    responses.forEach(r => {
-      const val = r[field] || 'No answer';
-      counts[val] = (counts[val] || 0) + 1;
-    });
+    responses.forEach(r => { const val = r[field] || 'No answer'; counts[val] = (counts[val] || 0) + 1; });
     return counts;
   };
 
-  const barChart = (counts, total) => {
-    return Object.entries(counts).sort((a,b) => b[1]-a[1]).map(([label, count]) => {
-      const pct = Math.round((count / total) * 100);
-      const barWidth = pct;
-      return `
-        <div style="margin-bottom:10px;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-            <span style="font-size:13px;color:var(--ink);">${label}</span>
-            <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);">${count} &nbsp;(${pct}%)</span>
-          </div>
-          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;">
-            <div style="height:100%;width:${barWidth}%;background:var(--accent);border-radius:4px;transition:width 0.6s ease;"></div>
-          </div>
-        </div>`;
-    }).join('');
-  };
+  const barChart = (counts, total) => Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([label,count]) => {
+    const pct = Math.round((count/total)*100);
+    return `<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px;">${label}</span><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);">${count} (${pct}%)</span></div><div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:var(--accent);border-radius:4px;"></div></div></div>`;
+  }).join('');
 
   const section = (title, field) => {
     const counts = countField(field);
-    return `
-      <div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px 28px;margin-bottom:20px;">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--highlight);margin-bottom:4px;">${field}</div>
-        <h3 style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:400;margin-bottom:20px;">${title}</h3>
-        ${barChart(counts, n)}
-      </div>`;
+    return `<div style="background:var(--white);border:1px solid var(--border);border-radius:8px;padding:24px 28px;margin-bottom:20px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--highlight);margin-bottom:4px;">${field}</div><h3 style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:400;margin-bottom:20px;">${title}</h3>${barChart(counts,n)}</div>`;
   };
 
   return `
@@ -799,17 +879,16 @@ function renderStats() {
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;">
         <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;">LATEST RESPONSE</div>
-        <div style="font-size:13px;color:var(--ink);">${new Date(responses[n-1].timestamp).toLocaleDateString('en-CA', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+        <div style="font-size:13px;">${new Date(responses[n-1].timestamp).toLocaleDateString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
       </div>
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 24px;">
         <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:6px;">FIRST RESPONSE</div>
-        <div style="font-size:13px;color:var(--ink);">${new Date(responses[0].timestamp).toLocaleDateString('en-CA', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+        <div style="font-size:13px;">${new Date(responses[0].timestamp).toLocaleDateString('en-CA',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
       </div>
     </div>
-    ${section('Primary Working Language', 'worklang')}
-    ${section('Years Lived in Korea', 'yearsinkorea')}
-    ${section('Familiarity with Korean Visual Culture', 'koreanvisual')}
-    ${section('Graphic Design Student / Professional', 'designprof')}
+    ${section('Primary Working Language','worklang')}
+    ${section('Years Lived in Korea','yearsinkorea')}
+    ${section('Familiarity with Korean Visual Culture','koreanvisual')}
   `;
 }
 
@@ -832,10 +911,10 @@ function clearData() {
   }
 }
 
-// Keyboard shortcut: Ctrl+Shift+A → open admin
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminModal();
 });
 </script>
 </body>
 </html>
+
