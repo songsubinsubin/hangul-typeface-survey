@@ -76,7 +76,7 @@ textarea:focus { outline:none; border-color:var(--accent); }
 .sp-dot { width:20px; height:20px; border:2px solid var(--border); border-radius:50%; background:var(--white); transition:all 0.15s; }
 .sp input:checked + label .sp-dot { background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-light); }
 .sp label:hover .sp-dot { border-color:var(--accent); }
-.sp-num { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); }
+.sp-num { display:none; }
 
 /* Typeface display — updated for consonants/vowels/sentence layout */
 .typeface-display { background:var(--ink); border-radius:8px; padding:32px 32px; margin-bottom:28px; position:relative; overflow:hidden; }
@@ -144,6 +144,28 @@ textarea:focus { outline:none; border-color:var(--accent); }
 .consent-item input:checked ~ .consent-box::after { content:'✓'; font-size:12px; color:white; font-weight:700; line-height:1; }
 .consent-item input:checked ~ .consent-text { color:var(--accent); }
 .consent-text { font-size:13.5px; color:var(--ink); line-height:1.6; }
+
+/* Floating anchor toggle — jump up to the typeface image, then back to where you were */
+.tf-float-btn { position:fixed; bottom:26px; right:26px; z-index:200; display:none; align-items:center; gap:8px; padding:12px 20px; background:var(--ink); color:var(--white); border:none; border-radius:30px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.04em; cursor:pointer; box-shadow:0 10px 28px rgba(0,0,0,0.28); transition:background 0.2s, transform 0.15s; }
+.tf-float-btn:hover { background:var(--accent); transform:translateY(-2px); }
+.tf-float-btn:active { transform:translateY(0); }
+.tf-float-btn .tf-float-icon { font-size:14px; line-height:1; }
+.tf-pin-btn { bottom:82px; background:var(--accent); }
+.tf-pin-btn:hover { background:#1e3a2d; }
+.tf-pin-btn.is-active { background:var(--highlight); color:var(--ink); }
+@media (max-width:480px) { .tf-float-btn { right:16px; bottom:16px; padding:11px 16px; font-size:11px; } .tf-pin-btn { bottom:66px; } }
+
+/* Pinned typeface preview — stays on screen while you scroll through the questions */
+.tf-pin-panel { position:fixed; top:64px; right:26px; width:280px; max-height:min(560px,70vh); overflow-y:auto; background:var(--ink); color:#EDE9E1; border-radius:10px; padding:16px 18px 18px; box-shadow:0 16px 44px rgba(0,0,0,0.32); z-index:190; display:none; }
+.tf-pin-panel.active { display:block; }
+.tf-pin-panel-header { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
+.tf-pin-panel-title { font-family:'DM Mono',monospace; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:#8FA79A; line-height:1.5; }
+.tf-pin-close { flex-shrink:0; background:none; border:none; color:#8FA79A; font-size:16px; cursor:pointer; line-height:1; padding:2px 4px; }
+.tf-pin-close:hover { color:#fff; }
+.tf-pin-sub { font-family:'DM Mono',monospace; font-size:8.5px; letter-spacing:0.1em; text-transform:uppercase; color:#4A5A50; margin:10px 0 4px; }
+.tf-pin-jamo { font-size:12.5px; color:#C8D4CC; line-height:1.6; letter-spacing:0.04em; word-break:break-all; }
+.tf-pin-sentence { font-size:16px; color:#EDE9E1; line-height:1.4; margin-top:2px; }
+@media (max-width:480px) { .tf-pin-panel { width:calc(100% - 32px); right:16px; top:56px; } }
 </style>
 </head>
 <body>
@@ -464,6 +486,31 @@ textarea:focus { outline:none; border-color:var(--accent); }
   </div>
 </div>
 
+<!-- Floating anchor toggle: jump up to the typeface image, then back to the question -->
+<button id="tf-float-btn" class="tf-float-btn" style="display:none;" onclick="handleFloatBtnClick()">
+  <span class="tf-float-icon" id="tf-float-icon">↑</span>
+  <span id="tf-float-label">View example</span>
+</button>
+
+<!-- Pin toggle: keep a mini preview of the typeface on screen while answering -->
+<button id="tf-pin-btn" class="tf-float-btn tf-pin-btn" style="display:none;" onclick="toggleTfPin()">
+  <span class="tf-float-icon">📌</span>
+  <span id="tf-pin-label">Keep example visible</span>
+</button>
+
+<div id="tf-pin-panel" class="tf-pin-panel">
+  <div class="tf-pin-panel-header">
+    <span class="tf-pin-panel-title" id="tf-pin-panel-title"></span>
+    <button class="tf-pin-close" onclick="toggleTfPin(false)" aria-label="Close">✕</button>
+  </div>
+  <div class="tf-pin-sub">Consonants (자음)</div>
+  <div class="tf-pin-jamo" id="tf-pin-jamo"></div>
+  <div class="tf-pin-sub">Vowels (모음)</div>
+  <div class="tf-pin-jamo" id="tf-pin-vowels"></div>
+  <div class="tf-pin-sub">Sample Sentence</div>
+  <div class="tf-pin-sentence" id="tf-pin-sentence"></div>
+</div>
+
 <!-- Admin login modal -->
 <div id="admin-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;">
   <div style="background:var(--white);border-radius:8px;padding:36px 40px;max-width:360px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
@@ -656,7 +703,7 @@ function buildTypefacePages() {
     page.innerHTML = `
       <div class="type-nav">${dots}</div>
 
-      <div class="typeface-display" style="font-family:${tf.css}">
+      <div class="typeface-display" id="tf-image-${tf.id}" style="font-family:${tf.css}">
         <div class="typeface-counter">${i+1} / ${typefaces.length}</div>
         <div class="typeface-label">Hangul Typeface ${i+1} · ${tf.style}</div>
 
@@ -719,6 +766,100 @@ function goTo(n) {
   if (target) target.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
   updateProgress(n);
+  updateFloatBtn(n);
+}
+
+// ── Floating anchor toggle ────────────────────────────────────
+// On typeface pages, this button lets the person jump up to look at the
+// typeface image again while answering, then jump right back to the
+// question they were in the middle of — no need to scroll manually.
+let tfFloatSavedScrollY = null;
+let tfFloatPageNum = null;
+
+function updateFloatBtn(n) {
+  const btn = document.getElementById('tf-float-btn');
+  const pinBtn = document.getElementById('tf-pin-btn');
+  if (!btn || !pinBtn) return;
+  const isTypefacePage = typeof n === 'number' && n >= 3 && n <= 12;
+  if (isTypefacePage) {
+    tfFloatPageNum = n;
+    tfFloatSavedScrollY = null;
+    btn.style.display = 'flex';
+    pinBtn.style.display = 'flex';
+    setFloatBtnMode('view');
+    toggleTfPin(false); // start each typeface unpinned
+  } else {
+    tfFloatPageNum = null;
+    btn.style.display = 'none';
+    pinBtn.style.display = 'none';
+    toggleTfPin(false);
+  }
+}
+
+function setFloatBtnMode(mode) {
+  const btn = document.getElementById('tf-float-btn');
+  const icon = document.getElementById('tf-float-icon');
+  const label = document.getElementById('tf-float-label');
+  if (!btn) return;
+  btn.dataset.mode = mode;
+  if (mode === 'view') {
+    icon.textContent = '↑';
+    label.textContent = 'View example';
+  } else {
+    icon.textContent = '↓';
+    label.textContent = 'Back to question';
+  }
+}
+
+function handleFloatBtnClick() {
+  const btn = document.getElementById('tf-float-btn');
+  if (!btn || tfFloatPageNum == null) return;
+  const tf = typefaces[tfFloatPageNum - 3];
+  const imageEl = tf ? document.getElementById(`tf-image-${tf.id}`) : null;
+  if (btn.dataset.mode === 'view') {
+    tfFloatSavedScrollY = window.scrollY;
+    if (imageEl) imageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setFloatBtnMode('back');
+  } else {
+    if (tfFloatSavedScrollY != null) {
+      window.scrollTo({ top: tfFloatSavedScrollY, behavior: 'smooth' });
+    }
+    setFloatBtnMode('view');
+  }
+}
+
+// ── Pin-to-screen preview ─────────────────────────────────────
+// Instead of jumping back and forth, this keeps a small live copy of the
+// typeface (consonants, vowels, sample sentence) fixed on screen so it's
+// visible the whole time you're rating and answering questions.
+let tfPinned = false;
+
+function toggleTfPin(force) {
+  const panel = document.getElementById('tf-pin-panel');
+  const pinBtn = document.getElementById('tf-pin-btn');
+  if (!panel || !pinBtn) return;
+  tfPinned = typeof force === 'boolean' ? force : !tfPinned;
+
+  if (tfPinned && tfFloatPageNum != null) {
+    const tf = typefaces[tfFloatPageNum - 3];
+    document.getElementById('tf-pin-panel-title').textContent =
+      `Hangul Typeface ${tfFloatPageNum - 2} · ${tf.style}`;
+    const jamoEl = document.getElementById('tf-pin-jamo');
+    const vowelEl = document.getElementById('tf-pin-vowels');
+    const sentEl = document.getElementById('tf-pin-sentence');
+    jamoEl.textContent = ALL_CONSONANTS;
+    vowelEl.textContent = ALL_VOWELS;
+    sentEl.innerHTML = SHARED_SENTENCE.split('\n').map(l => `<div>${l}</div>`).join('');
+    [jamoEl, vowelEl, sentEl].forEach(el => el.style.fontFamily = tf.css);
+    panel.classList.add('active');
+    pinBtn.classList.add('is-active');
+    pinBtn.querySelector('#tf-pin-label').textContent = 'Hide pinned example';
+  } else {
+    panel.classList.remove('active');
+    pinBtn.classList.remove('is-active');
+    const label = pinBtn.querySelector('#tf-pin-label');
+    if (label) label.textContent = 'Keep example visible';
+  }
 }
 
 function updateProgress(n) {
