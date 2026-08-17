@@ -110,6 +110,47 @@ textarea:focus { outline:none; border-color:var(--accent); }
 .font-opt-sample { font-size:10px; color:var(--muted); }
 .font-opt-preview { font-size:20px; color:var(--ink); line-height:1.25; margin-bottom:6px; opacity:0.9; }
 .font-opt-preview-img { display:block; max-width:100%; height:34px; object-fit:contain; object-position:left center; margin-bottom:8px; }
+.font-opt-other label { border-style:dashed; }
+.font-opt-other .font-opt-preview { opacity:0.5; }
+
+/* "Other" text fields — Part B custom word / Part C custom typeface */
+.other-row { margin-top:12px; }
+.other-check { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink); cursor:pointer; width:fit-content; }
+.other-check input { accent-color:var(--accent); }
+.other-input-wrap { margin-top:8px; }
+.other-input { width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:4px; font-size:13px; font-family:inherit; color:var(--ink); background:var(--white); }
+.other-input:focus { outline:none; border-color:var(--accent); }
+
+/* Part C — Hangul ↔ English match reference card */
+.match-reference { display:flex; align-items:stretch; gap:14px; margin:16px 0 20px; }
+@media (max-width:560px) { .match-reference { flex-direction:column; } }
+.match-ref-card { flex:1; border:1px solid var(--border); border-radius:8px; padding:16px 18px; background:var(--white); text-align:center; }
+.match-ref-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+.match-ref-preview { font-size:24px; color:var(--ink); line-height:1.25; margin-bottom:8px; min-height:30px; }
+.match-ref-name { font-size:11.5px; color:var(--muted); }
+.match-ref-arrow { display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--muted); }
+@media (max-width:560px) { .match-ref-arrow { transform:rotate(90deg); } }
+.match-ref-result { border-style:dashed; }
+.match-ref-result.matched { border-style:solid; border-color:var(--accent); background:var(--accent-light); }
+.match-ref-result.matched .match-ref-selected-name { font-weight:600; }
+.match-ref-result.matched .match-ref-name { color:var(--accent); }
+
+/* Final "overall match" page — selectable legend-style grids */
+.tf-legend-columns { display:grid; grid-template-columns:1fr 1fr; gap:28px; margin:24px 0 8px; }
+@media (max-width:760px) { .tf-legend-columns { grid-template-columns:1fr; } }
+.tf-legend-col-title { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--highlight); margin-bottom:10px; }
+.tf-legend-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+@media (max-width:480px) { .tf-legend-grid { grid-template-columns:1fr; } }
+.tf-legend-opt { position:relative; }
+.tf-legend-opt input { position:absolute; opacity:0; width:0; height:0; }
+.tf-legend-card { display:block; border:1px solid var(--border); border-radius:10px; padding:16px 16px 12px; background:var(--white); cursor:pointer; transition:all 0.15s; }
+.tf-legend-opt input:checked + .tf-legend-card { border-color:var(--accent); background:var(--accent-light); }
+.tf-legend-card:hover { border-color:var(--accent); background:var(--accent-light); }
+.tf-legend-preview { font-size:24px; color:var(--ink); line-height:1.25; margin-bottom:10px; word-break:break-word; }
+.tf-legend-preview-img { display:block; max-width:100%; height:32px; object-fit:contain; object-position:left center; margin-bottom:10px; }
+.tf-legend-name { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.tf-legend-cat { font-size:11.5px; color:var(--muted); }
+
 
 /* Nav */
 .nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:24px; border-top:1px solid var(--border); }
@@ -306,7 +347,7 @@ textarea:focus { outline:none; border-color:var(--accent); }
     <p class="intro-body">This survey explores whether graphic designers who don't speak Korean can still perceive the tone and personality of Hangul typefaces — and whether those perceptions connect to familiar English typefaces.</p>
     <p class="intro-body">You will view 10 Hangul typefaces displayed with consonants, vowels, and a sample sentence. <strong>You do not need to read or understand Korean.</strong> We're interested in your visual and emotional impressions only.</p>
     <div class="intro-meta">
-      <span class="meta-pill">~15 minutes</span>
+      <span class="meta-pill">~30 minutes</span>
       <span class="meta-pill">10 typefaces</span>
       <span class="meta-pill">Anonymous</span>
     </div>
@@ -390,6 +431,7 @@ textarea:focus { outline:none; border-color:var(--accent); }
       <div class="step-text-desc">Which English typeface feels tonally most similar? Briefly explain why.</div></div>
     </div>
 
+    <hr class="divider">
     <div class="notice-box" style="margin-top:24px;">
       You are <strong>not</strong> being asked to read or translate the Korean text. Focus entirely on the visual impression — stroke style, weight, shape, and overall feel.
     </div>
@@ -450,9 +492,52 @@ textarea:focus { outline:none; border-color:var(--accent); }
 
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(12)">← Back</button>
+      <button class="btn-next" onclick="goTo(14)">One Last Match →</button>
+    </div>
+  </div>
+
+  <!-- PAGE 14: OVERALL MATCH -->
+  <div class="page" id="page-14">
+    <div class="sec-tag">One Last Thing</div>
+    <h2 class="sec-title">If you had to pick just one overall match...</h2>
+    <p class="sec-desc">Looking back across all 10 Hangul typefaces and all 15 English typefaces, pick the single pair that feels like the strongest overall match to you — the one connection that stood out the most.</p>
+
+    <div class="match-reference" style="margin-top:8px;">
+      <div class="match-ref-card match-ref-result" id="overall-match-kr">
+        <div class="match-ref-label">Hangul typeface</div>
+        <div class="match-ref-preview match-ref-selected-name" id="overall-match-kr-name">—</div>
+        <div class="match-ref-name">Select one on the left</div>
+      </div>
+      <div class="match-ref-arrow">↔</div>
+      <div class="match-ref-card match-ref-result" id="overall-match-en">
+        <div class="match-ref-label">English typeface</div>
+        <div class="match-ref-preview match-ref-selected-name" id="overall-match-en-name">—</div>
+        <div class="match-ref-name">Select one on the right</div>
+      </div>
+    </div>
+
+    <div class="tf-legend-columns">
+      <div>
+        <div class="tf-legend-col-title">Hangul Typefaces</div>
+        <div class="tf-legend-grid" id="overall-grid-kr"></div>
+      </div>
+      <div>
+        <div class="tf-legend-col-title">English Typefaces</div>
+        <div class="tf-legend-grid" id="overall-grid-en"></div>
+      </div>
+    </div>
+
+    <div class="q-block" style="margin-top:22px;">
+      <div class="q-label">Why did you make this match? (optional)</div>
+      <textarea id="overall_match_reason" placeholder="e.g. 'Both felt confident and geometric — sharp angles, bold weight, and a similar sense of modern structure...'"></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn-back" onclick="goTo(13)">← Back</button>
       <button class="btn-submit" onclick="submitSurvey()">Submit Survey ✓</button>
     </div>
   </div>
+
 
   <!-- THANK YOU -->
   <div class="page" id="page-thanks">
@@ -635,6 +720,7 @@ function shuffle(arr) {
 }
 
 function buildTypefacePages() {
+  const KR_PREVIEW_WORD = "타이포그래피";
   const container = document.getElementById('typeface-pages');
   typefaces.forEach((tf, i) => {
     const pageNum = i + 3;
@@ -676,6 +762,16 @@ function buildTypefacePages() {
             <input type="checkbox" name="tf${tf.id}_em" id="tf${tf.id}_en${wi}" value="${w}" onchange="limitCheck(this,'tf${tf.id}_em',3)">
             <label for="tf${tf.id}_en${wi}">${w}</label>
           </div>`).join('')}
+      </div>
+      <div class="other-row">
+        <label class="other-check" for="tf${tf.id}_eo">
+          <input type="checkbox" id="tf${tf.id}_eo" onchange="toggleOtherField(this,'tf${tf.id}_eo_wrap')">
+          <span>Other (not listed above)</span>
+        </label>
+        <div class="other-input-wrap" id="tf${tf.id}_eo_wrap" style="display:none;">
+          <input type="text" id="tf${tf.id}_eo_text" class="other-input" placeholder="Type your own word..." oninput="syncOtherEmotion(this,'tf${tf.id}_em','tf${tf.id}_eo_hidden')">
+          <input type="checkbox" name="tf${tf.id}_em" id="tf${tf.id}_eo_hidden" style="display:none;">
+        </div>
       </div>`;
 
     // Font match grid — fonts with a real sample image show it (embedded as a
@@ -685,7 +781,7 @@ function buildTypefacePages() {
     const fontMatchHtml = `<div class="font-match-grid">
       ${shuffledFonts.map((f,fi)=>`
         <div class="font-opt">
-          <input type="radio" name="tf${tf.id}_match" id="tf${tf.id}_fm${fi}" value="${f.name}">
+          <input type="radio" name="tf${tf.id}_match" id="tf${tf.id}_fm${fi}" value="${f.name}" onchange="updateMatch('tf${tf.id}', '${f.name.replace(/'/g,"\\'")}')">
           <label for="tf${tf.id}_fm${fi}">
             ${f.img
               ? `<img class="font-opt-preview-img" src="${f.img}" alt="${f.name} sample" loading="lazy">`
@@ -694,6 +790,17 @@ function buildTypefacePages() {
             <span class="font-opt-sample">${f.cat}</span>
           </label>
         </div>`).join('')}
+      <div class="font-opt font-opt-other">
+        <input type="radio" name="tf${tf.id}_match" id="tf${tf.id}_fm_other" value="Other" onchange="updateMatch('tf${tf.id}', 'Other'); toggleOtherField(this,'tf${tf.id}_fo_wrap')">
+        <label for="tf${tf.id}_fm_other">
+          <span class="font-opt-preview" style="font-family:serif;">Aa</span>
+          <span class="font-opt-name">Other</span>
+          <span class="font-opt-sample">Not listed — specify below</span>
+        </label>
+      </div>
+    </div>
+    <div class="other-input-wrap" id="tf${tf.id}_fo_wrap" style="display:none; margin-top:10px;">
+      <input type="text" id="tf${tf.id}_fo_text" class="other-input" placeholder="Name the typeface you have in mind..." oninput="document.getElementById('match-name-tf${tf.id}').textContent = this.value || '—'">
     </div>`;
 
     // Sentence with newline support
@@ -731,6 +838,10 @@ function buildTypefacePages() {
       <h2 class="sec-title">Rate this typeface</h2>
       <p class="sec-desc">1 = strongly left word, 7 = strongly right word. Trust your first impression.</p>
       ${scalesHtml}
+      <div class="q-block" style="margin-top:18px;">
+        <div class="q-label">Other — anything else about its personality not captured above? (optional)</div>
+        <textarea id="tf${tf.id}_a_other" placeholder="Optional: describe any other personality trait you noticed..."></textarea>
+      </div>
       <hr class="divider">
 
       <div class="sec-tag">Part B — Emotion Words</div>
@@ -741,11 +852,30 @@ function buildTypefacePages() {
 
       <div class="sec-tag">Part C — English Typeface Match</div>
       <h2 class="sec-title">Which English typeface feels most similar?</h2>
-      <p class="sec-desc">Choose the English typeface you feel carries the most similar tone or personality to this Hangul typeface.</p>
+      <p class="sec-desc">Choose the English typeface you feel carries the most similar tone or personality to this Hangul typeface. The card below shows what you're matching.</p>
+
+      <div class="match-reference">
+        <div class="match-ref-card">
+          <div class="match-ref-label">This Hangul typeface</div>
+          <div class="match-ref-preview" style="font-family:${tf.css}">${KR_PREVIEW_WORD}</div>
+          <div class="match-ref-name">Hangul Typeface ${i+1} · ${tf.style}</div>
+        </div>
+        <div class="match-ref-arrow">→</div>
+        <div class="match-ref-card match-ref-result" id="match-ref-result-tf${tf.id}">
+          <div class="match-ref-label">Matched with</div>
+          <div class="match-ref-preview match-ref-selected-name" id="match-name-tf${tf.id}">—</div>
+          <div class="match-ref-name">Click an option below to connect it here</div>
+        </div>
+      </div>
+
       ${fontMatchHtml}
       <div class="q-block" style="margin-top:18px;">
         <div class="q-label">Which visual quality most influenced your impression: the brushstroke quality, stroke width, or the shape of the edges?</div>
         <textarea id="tf${tf.id}_reason" placeholder="e.g. 'The stroke width and edge shapes felt very similar — both carry the same structured, formal quality...'"></textarea>
+      </div>
+      <div class="q-block" style="margin-top:14px;">
+        <div class="q-label">Other — anything else you'd like to note about this match? (optional)</div>
+        <textarea id="tf${tf.id}_c_other" placeholder="Optional: any other comments about the typeface match..."></textarea>
       </div>
 
       <div class="nav-row">
@@ -758,6 +888,62 @@ function buildTypefacePages() {
 }
 
 buildTypefacePages();
+
+// ── Final page: overall Hangul ↔ English match ─────────────────
+// Reuses the same englishFonts / typefaces data to build two
+// selectable legend grids; picking one card in each grid connects
+// them in the reference card above.
+const OVERALL_KR_PREVIEW_WORD = "타이포그래피";
+let overallMatchKr = null, overallMatchEn = null;
+
+function buildOverallMatchPage() {
+  const krGrid = document.getElementById('overall-grid-kr');
+  if (krGrid) {
+    krGrid.innerHTML = typefaces.map((tf,ti) => `
+      <div class="tf-legend-opt">
+        <input type="radio" name="overall_kr" id="ov_kr_${ti}"
+          onchange="updateOverallMatch('kr', ${JSON.stringify(`Hangul Typeface ${ti+1}`)}, ${JSON.stringify(tf.css)}, ${JSON.stringify(OVERALL_KR_PREVIEW_WORD)}, false)">
+        <label for="ov_kr_${ti}" class="tf-legend-card">
+          <div class="tf-legend-preview" style="font-family:${tf.css}">${OVERALL_KR_PREVIEW_WORD}</div>
+          <div class="tf-legend-name">Hangul Typeface ${ti+1}</div>
+          <div class="tf-legend-cat">${tf.style}</div>
+        </label>
+      </div>`).join('');
+  }
+
+  const enGrid = document.getElementById('overall-grid-en');
+  if (enGrid) {
+    enGrid.innerHTML = englishFonts.map((f,fi) => `
+      <div class="tf-legend-opt">
+        <input type="radio" name="overall_en" id="ov_en_${fi}"
+          onchange="updateOverallMatch('en', ${JSON.stringify(f.name)}, ${JSON.stringify(f.css)}, ${JSON.stringify(f.sample)}, ${f.img ? JSON.stringify(f.img) : 'false'})">
+        <label for="ov_en_${fi}" class="tf-legend-card">
+          ${f.img
+            ? `<img class="tf-legend-preview-img" src="${f.img}" alt="${f.name} sample" loading="lazy">`
+            : `<div class="tf-legend-preview" style="font-family:${f.css}">${f.sample}</div>`}
+          <div class="tf-legend-name">${f.name}</div>
+          <div class="tf-legend-cat">${f.cat}</div>
+        </label>
+      </div>`).join('');
+  }
+}
+buildOverallMatchPage();
+
+function updateOverallMatch(side, name, css, sample, img) {
+  const nameEl = document.getElementById(`overall-match-${side}-name`);
+  const cardEl = document.getElementById(`overall-match-${side}`);
+  if (nameEl) {
+    nameEl.innerHTML = img
+      ? `<img src="${img}" alt="${name}" style="display:block;max-width:100%;height:30px;object-fit:contain;object-position:center;margin:0 auto;">`
+      : `<span style="font-family:${css}">${sample}</span>`;
+  }
+  if (cardEl) {
+    cardEl.classList.add('matched');
+    const sub = cardEl.querySelector('.match-ref-name');
+    if (sub) sub.textContent = name;
+  }
+  if (side === 'kr') overallMatchKr = name; else overallMatchEn = name;
+}
 
 function goTo(n) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -868,9 +1054,9 @@ function updateProgress(n) {
     document.getElementById('progressLabel').textContent = 'Complete';
     return;
   }
-  const pct = Math.min(Math.round((n / 13) * 100), 100);
+  const pct = Math.min(Math.round((n / 14) * 100), 100);
   document.getElementById('progressFill').style.width = pct + '%';
-  const labels = { 0:'Introduction', 1:'About You', 2:'Instructions', 13:'Final Questions' };
+  const labels = { 0:'Introduction', 1:'About You', 2:'Instructions', 13:'Final Questions', 14:'Overall Match' };
   document.getElementById('progressLabel').textContent =
     (n >= 3 && n <= 12) ? `Typeface ${n-2} of 10` : (labels[n] || '');
 }
@@ -886,6 +1072,44 @@ function toggleOther(triggerId, wrapId, show) {
   if (show === false) { wrap.style.display = 'none'; return; }
   const el = document.getElementById(triggerId);
   wrap.style.display = (el && el.checked) ? 'block' : 'none';
+}
+
+// Show/hide an "Other" text field based on the checkbox/radio that triggered it.
+function toggleOtherField(el, wrapId) {
+  const wrap = document.getElementById(wrapId);
+  if (!wrap) return;
+  wrap.style.display = (el && el.checked) ? 'block' : 'none';
+  if (el && el.checked) {
+    const input = wrap.querySelector('input[type="text"]');
+    if (input) input.focus();
+  }
+}
+
+// Part B "Other" word: keep the hidden checkbox (which is what actually
+// counts toward the 3-word limit) checked/unchecked and valued in sync with
+// what the person types, and visually check the "Other" box once they type.
+function syncOtherEmotion(textInput, groupName, hiddenId) {
+  const hidden = document.getElementById(hiddenId);
+  const value = textInput.value.trim();
+  if (!hidden) return;
+  hidden.name = groupName;
+  hidden.value = value;
+  if (value) {
+    hidden.checked = true;
+    limitCheck(hidden, groupName, 3);
+    if (!hidden.checked) { textInput.value = ''; hidden.value = ''; }
+  } else {
+    hidden.checked = false;
+  }
+}
+
+// Part C: reflect the selected English typeface (or a typed "Other") in the
+// reference card so people can see the two typefaces connected side by side.
+function updateMatch(tfId, fontName) {
+  const nameEl = document.getElementById(`match-name-${tfId}`);
+  const cardEl = document.getElementById(`match-ref-result-${tfId}`);
+  if (nameEl) nameEl.textContent = fontName === 'Other' ? '(typing below)' : fontName;
+  if (cardEl) cardEl.classList.add('matched');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -953,6 +1177,15 @@ function collectFinalReflection() {
   };
 }
 
+function collectOverallMatch() {
+  const reasonEl = document.getElementById('overall_match_reason');
+  return {
+    overall_match_hangul: overallMatchKr || '',
+    overall_match_english: overallMatchEn || '',
+    overall_match_reason: reasonEl ? reasonEl.value.trim() : '',
+  };
+}
+
 const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzDj4twninsivMTTwz8eVq1hBF_MOMfaBk-U8pX523dWxJzzoSrQTOZqpEIYYYb-_vn/exec';
 
 function sendToGoogleSheets(response) {
@@ -971,7 +1204,8 @@ function submitSurvey() {
   const demo = collectDemographics();
   const tfData = collectTypefaceResponses();
   const final = collectFinalReflection();
-  const response = { timestamp: new Date().toISOString(), ...demo, ...tfData, ...final };
+  const overall = collectOverallMatch();
+  const response = { timestamp: new Date().toISOString(), ...demo, ...tfData, ...final, ...overall };
   saveResponse(response);
   sendToGoogleSheets(response);
   goTo('thanks');
@@ -1077,5 +1311,6 @@ document.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
+
 
 
