@@ -492,52 +492,9 @@ textarea:focus { outline:none; border-color:var(--accent); }
 
     <div class="nav-row">
       <button class="btn-back" onclick="goTo(12)">← Back</button>
-      <button class="btn-next" onclick="goTo(14)">One Last Match →</button>
-    </div>
-  </div>
-
-  <!-- PAGE 14: OVERALL MATCH -->
-  <div class="page" id="page-14">
-    <div class="sec-tag">One Last Thing</div>
-    <h2 class="sec-title">If you had to pick just one overall match...</h2>
-    <p class="sec-desc">Looking back across all 10 Hangul typefaces and all 15 English typefaces, pick the single pair that feels like the strongest overall match to you — the one connection that stood out the most.</p>
-
-    <div class="match-reference" style="margin-top:8px;">
-      <div class="match-ref-card match-ref-result" id="overall-match-kr">
-        <div class="match-ref-label">Hangul typeface</div>
-        <div class="match-ref-preview match-ref-selected-name" id="overall-match-kr-name">—</div>
-        <div class="match-ref-name">Select one on the left</div>
-      </div>
-      <div class="match-ref-arrow">↔</div>
-      <div class="match-ref-card match-ref-result" id="overall-match-en">
-        <div class="match-ref-label">English typeface</div>
-        <div class="match-ref-preview match-ref-selected-name" id="overall-match-en-name">—</div>
-        <div class="match-ref-name">Select one on the right</div>
-      </div>
-    </div>
-
-    <div class="tf-legend-columns">
-      <div>
-        <div class="tf-legend-col-title">Hangul Typefaces</div>
-        <div class="tf-legend-grid" id="overall-grid-kr"></div>
-      </div>
-      <div>
-        <div class="tf-legend-col-title">English Typefaces</div>
-        <div class="tf-legend-grid" id="overall-grid-en"></div>
-      </div>
-    </div>
-
-    <div class="q-block" style="margin-top:22px;">
-      <div class="q-label">Why did you make this match? (optional)</div>
-      <textarea id="overall_match_reason" placeholder="e.g. 'Both felt confident and geometric — sharp angles, bold weight, and a similar sense of modern structure...'"></textarea>
-    </div>
-
-    <div class="nav-row">
-      <button class="btn-back" onclick="goTo(13)">← Back</button>
       <button class="btn-submit" onclick="submitSurvey()">Submit Survey ✓</button>
     </div>
   </div>
-
 
   <!-- THANK YOU -->
   <div class="page" id="page-thanks">
@@ -889,63 +846,42 @@ function buildTypefacePages() {
 
 buildTypefacePages();
 
-// ── Final page: overall Hangul ↔ English match ─────────────────
-// Reuses the same englishFonts / typefaces data to build two
-// selectable legend grids; picking one card in each grid connects
-// them in the reference card above.
-const OVERALL_KR_PREVIEW_WORD = "타이포그래피";
-let overallMatchKr = null, overallMatchEn = null;
-
-function buildOverallMatchPage() {
-  const krGrid = document.getElementById('overall-grid-kr');
-  if (krGrid) {
-    krGrid.innerHTML = typefaces.map((tf,ti) => `
-      <div class="tf-legend-opt">
-        <input type="radio" name="overall_kr" id="ov_kr_${ti}"
-          onchange="updateOverallMatch('kr', ${JSON.stringify(`Hangul Typeface ${ti+1}`)}, ${JSON.stringify(tf.css)}, ${JSON.stringify(OVERALL_KR_PREVIEW_WORD)}, false)">
-        <label for="ov_kr_${ti}" class="tf-legend-card">
-          <div class="tf-legend-preview" style="font-family:${tf.css}">${OVERALL_KR_PREVIEW_WORD}</div>
-          <div class="tf-legend-name">Hangul Typeface ${ti+1}</div>
-          <div class="tf-legend-cat">${tf.style}</div>
-        </label>
-      </div>`).join('');
-  }
-
-  const enGrid = document.getElementById('overall-grid-en');
-  if (enGrid) {
-    enGrid.innerHTML = englishFonts.map((f,fi) => `
-      <div class="tf-legend-opt">
-        <input type="radio" name="overall_en" id="ov_en_${fi}"
-          onchange="updateOverallMatch('en', ${JSON.stringify(f.name)}, ${JSON.stringify(f.css)}, ${JSON.stringify(f.sample)}, ${f.img ? JSON.stringify(f.img) : 'false'})">
-        <label for="ov_en_${fi}" class="tf-legend-card">
-          ${f.img
-            ? `<img class="tf-legend-preview-img" src="${f.img}" alt="${f.name} sample" loading="lazy">`
-            : `<div class="tf-legend-preview" style="font-family:${f.css}">${f.sample}</div>`}
-          <div class="tf-legend-name">${f.name}</div>
-          <div class="tf-legend-cat">${f.cat}</div>
-        </label>
-      </div>`).join('');
-  }
+// ── Page validation ──────────────────────────────────────────
+// Before advancing to a later page, make sure every radio-button
+// question group on the current page has an answer selected.
+function getCurrentPageNumber() {
+  const activePage = document.querySelector('.page.active');
+  if (!activePage) return null;
+  const m = activePage.id.match(/^page-(\d+)$/);
+  return m ? parseInt(m[1], 10) : null;
 }
-buildOverallMatchPage();
 
-function updateOverallMatch(side, name, css, sample, img) {
-  const nameEl = document.getElementById(`overall-match-${side}-name`);
-  const cardEl = document.getElementById(`overall-match-${side}`);
-  if (nameEl) {
-    nameEl.innerHTML = img
-      ? `<img src="${img}" alt="${name}" style="display:block;max-width:100%;height:30px;object-fit:contain;object-position:center;margin:0 auto;">`
-      : `<span style="font-family:${css}">${sample}</span>`;
+function validatePage(pageNum) {
+  const page = document.getElementById(`page-${pageNum}`);
+  if (!page) return true;
+  const radios = page.querySelectorAll('input[type="radio"]');
+  const groups = new Set();
+  radios.forEach(r => groups.add(r.name));
+  let firstInvalid = null;
+  groups.forEach(name => {
+    if (!page.querySelector(`input[name="${name}"]:checked`)) {
+      if (!firstInvalid) firstInvalid = page.querySelector(`input[name="${name}"]`);
+    }
+  });
+  if (firstInvalid) {
+    const block = firstInvalid.closest('.q-block') || firstInvalid.closest('.scale-wrap');
+    if (block) block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    alert('Please answer all questions on this page before continuing.');
+    return false;
   }
-  if (cardEl) {
-    cardEl.classList.add('matched');
-    const sub = cardEl.querySelector('.match-ref-name');
-    if (sub) sub.textContent = name;
-  }
-  if (side === 'kr') overallMatchKr = name; else overallMatchEn = name;
+  return true;
 }
 
 function goTo(n) {
+  const current = getCurrentPageNumber();
+  if (current !== null && typeof n === 'number' && n > current) {
+    if (!validatePage(current)) return;
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const id = n === 'thanks' ? 'page-thanks' : `page-${n}`;
   const target = document.getElementById(id);
@@ -1177,15 +1113,6 @@ function collectFinalReflection() {
   };
 }
 
-function collectOverallMatch() {
-  const reasonEl = document.getElementById('overall_match_reason');
-  return {
-    overall_match_hangul: overallMatchKr || '',
-    overall_match_english: overallMatchEn || '',
-    overall_match_reason: reasonEl ? reasonEl.value.trim() : '',
-  };
-}
-
 const SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzDj4twninsivMTTwz8eVq1hBF_MOMfaBk-U8pX523dWxJzzoSrQTOZqpEIYYYb-_vn/exec';
 
 function sendToGoogleSheets(response) {
@@ -1201,11 +1128,11 @@ function sendToGoogleSheets(response) {
 }
 
 function submitSurvey() {
+  if (!validatePage(13)) return;
   const demo = collectDemographics();
   const tfData = collectTypefaceResponses();
   const final = collectFinalReflection();
-  const overall = collectOverallMatch();
-  const response = { timestamp: new Date().toISOString(), ...demo, ...tfData, ...final, ...overall };
+  const response = { timestamp: new Date().toISOString(), ...demo, ...tfData, ...final };
   saveResponse(response);
   sendToGoogleSheets(response);
   goTo('thanks');
@@ -1311,6 +1238,7 @@ document.addEventListener('keydown', e => {
 </script>
 </body>
 </html>
+
 
 
 
